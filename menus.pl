@@ -43,7 +43,7 @@ gameModeMenu:-
   printgameModeMenu,
   getChar(Input),
   (
-		% Input = '1' -> startPvPGame;
+		Input = '1' -> startPvPGame;
   	% Input = '2' -> startPvBGame;
 	  % Input = '3' -> startBvBGame;
 	  Input = '4' -> difficultyMenu;
@@ -76,15 +76,15 @@ printgameModeMenu:-
   write('===================================================='),nl,
   write('Choose an option: '),nl.
 
-% startPvPGame:-
-% 	createPvPGame(Game),
-% 	playGame(Game).
-% startPvBGame:-
-% 	createPvBGame(Game),
-% 	playGame(Game).
-% startBvBGame:-
-% 	createBvBGame(Game),
-% 	playGame(Game).
+startPvPGame:-
+	createPvPGame(Game),
+	playGame(Game).
+startPvBGame:-
+	createPvBGame(Game),
+	playGame(Game).
+startBvBGame:-
+	createBvBGame(Game),
+	playGame(Game).
 
 difficultyMenu:-
   printdifficultyMenu,
