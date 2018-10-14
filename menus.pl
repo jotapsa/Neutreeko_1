@@ -90,9 +90,9 @@ difficultyMenu:-
   printdifficultyMenu,
   getChar(Input),
   (
-    Input = '1' -> botDifficulty(1);
-    Input = '2' -> botDifficulty(2);
-    Input = '3' -> botDifficulty(3);
+    % Input = '1' -> setBotDifficulty(1), gameModeMenu;
+    % Input = '2' -> setBotDifficulty(2), gameModeMenu;
+    % Input = '3' -> setBotDifficulty(3), gameModeMenu;
     Input = '4';
 
     nl,
