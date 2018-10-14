@@ -3,7 +3,7 @@
 
 mainMenu:-
   printMainMenu,
-  get_char(Input),
+  getChar(Input),
   (
     Input = '1' -> gameModeMenu, mainMenu;
     Input = '2' -> printHelp, mainMenu;
@@ -41,7 +41,7 @@ printMainMenu:-
 
 gameModeMenu:-
   printgameModeMenu,
-  get_char(Input),
+  getChar(Input),
   (
 		% Input = '1' -> startPvPGame;
   	% Input = '2' -> startPvBGame;
@@ -88,7 +88,7 @@ printgameModeMenu:-
 
 difficultyMenu:-
   printdifficultyMenu,
-  get_char(Input),
+  getChar(Input),
   (
     Input = '1' -> botDifficulty(1);
     Input = '2' -> botDifficulty(2);

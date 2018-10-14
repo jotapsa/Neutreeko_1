@@ -9,6 +9,11 @@ clearConsole(N):-
 	N1 is N-1,
 	clearConsole(N1).
 
+%Trap char in Input variable, discard "Enter"
+getChar(Input):-
+  get_char(Input),
+  get_char(_).
+
 pressEnterToContinue:-
 	write('Press <Enter> to continue.'), nl,
 	waitForEnter, !.
