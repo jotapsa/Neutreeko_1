@@ -1,24 +1,11 @@
-:-use_module(library(lists)).
+:-include('menus.pl').
+:-include('utilities.pl').
 
-board([
-[0,'branca',0,'branca',0],
-[0,0,'preta',0,0],
-[0,0,0,0,0],
-[0,0,'branca',0,0],
-[0,'preta',0,'preta',0]
-]).
+neutreeko:-mainMenu.
 
-display_game(Board, Player) :- display_board(Board).
+%p = player, b = bot
+gameMode(pvp).
+gameMode(pvb).
+gameMode(bvb).
 
-display_board([]).
-display_board([L|T]):- display_line(L), nl,
-                        display_board(T).
-
-display_line([]).
-display_line([C|L]) :- display_cell(C),
-                        display_line(L).
-
-display_cell([]).
-display_cell(0) :- write('-').
-display_cell('branca') :- write('B').
-display_cell('preta') :- write('P').
+botDifficulty(1).
