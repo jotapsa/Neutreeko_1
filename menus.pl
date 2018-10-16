@@ -137,7 +137,7 @@ printAbout:-
   write('=  it can often be a good idea to immobilize       ='),nl,
   write('=  your opponent by forcing him into a corner.     ='),nl,
   write('=                                                  ='),nl,
-  write('=                                      Page 1 of 2 ='),nl,
+  write('=                                              1/2 ='),nl,
   write('===================================================='),nl,
 	pressEnterToContinue, nl,
 
@@ -151,12 +151,12 @@ printAbout:-
   write('=                                                  ='),nl,
   write('=                                                  ='),nl,
   write('=  Bernardo Manuel Costa Barbosa - up201503477     ='),nl,
-  write('=  João Pedro Teixeira Pereira de Sá - up201506252 ='),nl,
+  write('=  Joao Pedro Teixeira Pereira de Sa - up201506252 ='),nl,
   write('=                                                  ='),nl,
-  write('=  Programação em Lógica                           ='),nl,
+  write('=  Programacao em Logica                           ='),nl,
   write('=  Faculdade de Engenharia                         ='),nl,
   write('=  Universidade do Porto  2018/2019                ='),nl,
-  write('=                                      Page 2 of 2 ='),nl,
+  write('=                                              2/2 ='),nl,
   write('===================================================='),nl,
   pressEnterToContinue, nl.
 
@@ -177,7 +177,7 @@ printHelp:-
   write('=                                                  ='),nl,
   write('=  A checker slides orthogonally or diagonally     ='),nl,
   write('=  until stopped by an occupied cell or the edge   ='),nl,
-  write('=                                      Page 1 of 2 ='),nl,
+  write('=                                              1/2 ='),nl,
   write('===================================================='),nl,
 	pressEnterToContinue, nl,
 
@@ -196,6 +196,6 @@ printHelp:-
   write('=                                                  ='),nl,
   write('=                                                  ='),nl,
   write('=                                                  ='),nl,
-  write('=                                      Page 2 of 2 ='),nl,
+  write('=                                              2/2 ='),nl,
   write('===================================================='),nl,
   pressEnterToContinue, nl.
