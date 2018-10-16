@@ -47,9 +47,11 @@ display_line(Line, Y):-
 
 display_line_aux([]).
 display_line_aux([Cell|Tail]):-
-  getSymbol(Symbol,Piece),
-  write(' '), write(Piece), write('  | '),
+  getCellSymbol(Cell,Symbol),
+  write(' '), write(Symbol), write('  | '),
+  display_line_aux(Tail).
 
-getSymbol(emptyCell, ' ').
-getSymbol(whiteCell, 'X').
-getSymbol(blackCell, 'Y').
+getCellSymbol(emptyCell, ' ').
+getCellSymbol(whiteCell, 'O').
+getCellSymbol(blackCell, '#').
+getCellSymbol(_, '?').

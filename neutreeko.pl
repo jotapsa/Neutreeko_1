@@ -14,11 +14,6 @@ getPlayerName(blackPlayer, 'Black').
 piece(whitePiece).
 piece(blackPiece).
 
-getCellSymbol(emptyCell, ' ').
-getCellSymbol(whiteCell, 'O').
-getCellSymbol(blackCell, '#').
-getCellSymbol(_, '?').
-
 pieceIsOwnedBy(whiteCell, whitePlayer).
 pieceIsOwnedBy(blackCell, blackPlayer).
 
