@@ -17,24 +17,31 @@ createBvBGame(Game):-
 	Game = [Board, [3, 3], blackPlayer, bvb], !.
 
 board([
-[0,'branca',0,'branca',0],
-[0,0,'preta',0,0],
-[0,0,0,0,0],
-[0,0,'branca',0,0],
-[0,'preta',0,'preta',0]
-]).
+  [emptyCell,whiteCell,emptyCell,whiteCell,emptyCell],
+  [emptyCell,emptyCell,blackCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,whiteCell,emptyCell,emptyCell],
+  [emptyCell,blackCell,emptyCell,blackCell,emptyCell]
+  ]).
 
-display_game(Board, Player) :- display_board(Board).
+display_game([],_).
+display_game([Line|Tail], Y):-
+  printLine, nl,
+  printSpaces, nl,
+  Y1 is Y+1,
+  display_line(Line, Y1), nl,
+  printSpaces, nl,
+  display_game(Tail, Y1).
 
-display_board([]).
-display_board([L|T]):- display_line(L), nl,
-                        display_board(T).
+display_line(Line, Y):-
+  write(Y), write('  |'),
+  display_line_aux(Line).
 
-display_line([]).
-display_line([C|L]) :- display_cell(C),
-                        display_line(L).
+display_line_aux([]).
+display_line_aux([Cell|Tail]):-
+  getSymbol(Symbol,Piece),
+  write(' '), write(Piece), write('  | '),
 
-display_cell([]).
-display_cell(0) :- write('-').
-display_cell('branca') :- write('B').
-display_cell('preta') :- write('P').
+getSymbol(emptyCell, ' ').
+getSymbol(whiteCell, 'X').
+getSymbol(blackCell, 'Y').

@@ -9,7 +9,7 @@ clearConsole(N):-
 	N1 is N-1,
 	clearConsole(N1).
 
-%TODO: improve this to get character before "Enter" 
+%TODO: improve this to get character before "Enter"
 %Trap char in Input variable, discard "Enter"
 getChar(Input):-
   get_char(Input),
@@ -21,3 +21,10 @@ pressEnterToContinue:-
 
 waitForEnter:-
 	get_char(_).
+
+
+% for display
+
+printLetters:-write('     A     B     C     D     E     F     G     H     I').
+printSpaces:-write('   |    |     |     |     |     |     |     |     |     |').
+printLine:-write('   ------------------------------------------------------').
