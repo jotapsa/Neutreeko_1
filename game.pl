@@ -5,7 +5,6 @@
 % Game(2) - the current player turn
 % Game(3) - Game mode
 
-
 createPvPGame(Game):-
 	initialBoard(Board),
 	Game = [Board, [3, 3], blackPlayer, pvp], !.
@@ -16,7 +15,11 @@ createBvBGame(Game):-
 	initialBoard(Board),
 	Game = [Board, [3, 3], blackPlayer, bvb], !.
 
-board([
+%%% gets the board of the game specified.
+%%% 1. game; 2. board of game.
+getGameBoard([Board|_], Board).
+
+initialBoard([
   [emptyCell,whiteCell,emptyCell,whiteCell,emptyCell],
   [emptyCell,emptyCell,blackCell,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],

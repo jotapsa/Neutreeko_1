@@ -34,4 +34,6 @@ gameMode(bvb).
 
 % Game Cycle
 
-playGame(Game):-true.
+playGame(Game):-
+  getGameBoard(Game, Board),
+  display_game(Board).
