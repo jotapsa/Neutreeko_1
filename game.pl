@@ -26,7 +26,7 @@ board([
 
 display_game(Board):-
   display_board(Board, 0),
-  printLine, nl
+  printLine, nl,
   printLetters.
 
 display_board([],_).

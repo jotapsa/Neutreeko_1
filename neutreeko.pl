@@ -1,5 +1,6 @@
-:-include('menus.pl').
 :-include('utilities.pl').
+:-include('menus.pl').
+:-include('game.pl').
 
 neutreeko:-
   mainMenu.
