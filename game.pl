@@ -24,14 +24,19 @@ board([
   [emptyCell,blackCell,emptyCell,blackCell,emptyCell]
   ]).
 
-display_game([],_).
-display_game([Line|Tail], Y):-
+display_game(Board):-
+  display_board(Board, 0),
+  printLine, nl
+  printLetters.
+
+display_board([],_).
+display_board([Line|Tail], Y):-
   printLine, nl,
   printSpaces, nl,
   Y1 is Y+1,
   display_line(Line, Y1), nl,
   printSpaces, nl,
-  display_game(Tail, Y1).
+  display_board(Tail, Y1).
 
 display_line(Line, Y):-
   write(Y), write('  |'),
