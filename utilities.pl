@@ -25,6 +25,6 @@ waitForEnter:-
 
 % for display
 
-printLetters:-write('     A     B     C     D     E     F     G     H     I').
-printSpaces:-write('   |    |     |     |     |     |     |     |     |     |').
-printLine:-write('   ------------------------------------------------------').
+printLetters:-write('     A     B     C     D     E').
+printSpaces:-write('   |    |     |     |     |     |').
+printLine:-write('   ------------------------------').
