@@ -15,16 +15,13 @@ getChar(Input):-
   get_char(Input),
   get_char(_).
 
+getInt(Input):-
+	get_code(TempInput),
+	Input is TempInput - 48.
+
 pressEnterToContinue:-
 	write('Press <Enter> to continue.'), nl,
 	waitForEnter, !.
 
 waitForEnter:-
 	get_char(_).
-
-
-% for display
-
-printLetters:-write('     A     B     C     D     E').
-printSpaces:-write('   |    |     |     |     |     |').
-printLine:-write('   ------------------------------').

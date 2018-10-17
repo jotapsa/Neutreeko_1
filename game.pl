@@ -15,9 +15,20 @@ createBvBGame(Game):-
 	initialBoard(Board),
 	Game = [Board, [3, 3], blackPlayer, bvb], !.
 
-%%% gets the board of the game specified.
-%%% 1. game; 2. board of game.
-getGameBoard([Board|_], Board).
+%========================%
+%= @@ getters & setters =%
+%========================%
+
+get_game_board([Board|_], Board).
+
+get_game_mode(Game, Mode):-
+	getListElemAt(3, Game, Mode).
+
+get_game_player_turn(Game, Player):-
+  getListElemAt(2, Game, Player).
+%====================%
+%= @@ board presets =%
+%====================%
 
 initialBoard([
   [emptyCell,whiteCell,emptyCell,whiteCell,emptyCell],
@@ -26,32 +37,3 @@ initialBoard([
   [emptyCell,emptyCell,whiteCell,emptyCell,emptyCell],
   [emptyCell,blackCell,emptyCell,blackCell,emptyCell]
   ]).
-
-display_game(Board):-
-  display_board(Board, 0),
-  printLine, nl,
-  printLetters.
-
-display_board([],_).
-display_board([Line|Tail], Y):-
-  printLine, nl,
-  printSpaces, nl,
-  Y1 is Y+1,
-  display_line(Line, Y1), nl,
-  printSpaces, nl,
-  display_board(Tail, Y1).
-
-display_line(Line, Y):-
-  write(Y), write('  |'),
-  display_line_aux(Line).
-
-display_line_aux([]).
-display_line_aux([Cell|Tail]):-
-  getCellSymbol(Cell,Symbol),
-  write(' '), write(Symbol), write('  | '),
-  display_line_aux(Tail).
-
-getCellSymbol(emptyCell, ' ').
-getCellSymbol(whiteCell, 'O').
-getCellSymbol(blackCell, '#').
-getCellSymbol(_, '?').

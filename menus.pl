@@ -38,6 +38,15 @@ printMainMenu:-
   write('===================================================='),nl,
   write('Choose an option: '),nl.
 
+startPvPGame:-
+	createPvPGame(Game),
+	play_game(Game).
+startPvBGame:-
+  createPvBGame(Game),
+	play_game(Game).
+startBvBGame:-
+  createBvBGame(Game),
+  play_game(Game).
 
 gameModeMenu:-
   printgameModeMenu,
@@ -75,16 +84,6 @@ printgameModeMenu:-
   write('=                                                  ='),nl,
   write('===================================================='),nl,
   write('Choose an option: '),nl.
-
-startPvPGame:-
-	createPvPGame(Game),
-	playGame(Game).
-startPvBGame:-
-	createPvBGame(Game),
-	playGame(Game).
-startBvBGame:-
-	createBvBGame(Game),
-	playGame(Game).
 
 difficultyMenu:-
   printdifficultyMenu,
