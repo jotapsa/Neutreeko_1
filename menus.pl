@@ -19,7 +19,7 @@ mainMenu:-
 %TODO: Center printMainMenu & fix other menus
 
 printMainMenu:-
-  clearConsole,
+  clear_console,
   write('===================================================='),nl,
   write('=                  ..:: Menu ::..                  ='),nl,
   write('===================================================='),nl,
@@ -65,7 +65,7 @@ gameModeMenu:-
   ).
 
 printgameModeMenu:-
-  clearConsole,
+  clear_console,
   write('===================================================='),nl,
   write('=                ..:: Game Mode ::..               ='),nl,
   write('===================================================='),nl,
@@ -101,7 +101,7 @@ difficultyMenu:-
   ).
 
 printdifficultyMenu:-
-  clearConsole,
+  clear_console,
   write('===================================================='),nl,
   write('=           ..:: Computer Difficulty ::..          ='),nl,
   write('===================================================='),nl,
@@ -121,7 +121,7 @@ printdifficultyMenu:-
   write('Choose an option: '),nl.
 
 printAbout:-
-  clearConsole,
+  clear_console,
   write('===================================================='),nl,
   write('=                  ..:: About ::..                 ='),nl,
   write('===================================================='),nl,
@@ -140,7 +140,7 @@ printAbout:-
   write('===================================================='),nl,
 	pressEnterToContinue, nl,
 
-  clearConsole,
+  clear_console,
   write('===================================================='),nl,
   write('=                  ..:: About ::..                 ='),nl,
   write('===================================================='),nl,
@@ -161,7 +161,7 @@ printAbout:-
 
 
 printHelp:-
-  clearConsole,
+  clear_console,
   write('===================================================='),nl,
   write('=               ..:: How To Play ::..              ='),nl,
   write('===================================================='),nl,
@@ -180,7 +180,7 @@ printHelp:-
   write('===================================================='),nl,
 	pressEnterToContinue, nl,
 
-  clearConsole,
+  clear_console,
   write('===================================================='),nl,
   write('=               ..:: How To Play ::..              ='),nl,
   write('===================================================='),nl,

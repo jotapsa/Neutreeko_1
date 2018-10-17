@@ -1,6 +1,7 @@
 :-include('utilities.pl').
 :-include('containers.pl').
 :-include('menus.pl').
+:-include('display_game.pl').
 :-include('game.pl').
 
 neutreeko:-
@@ -26,7 +27,8 @@ gameMode(bvb).
 
 
 play_game(Game):-
-  % assert_game_not_over(Game),
+  % assert_draw(Game)
+  % assert_win(Game),
   (
     %bvb
     (get_game_mode(Game, Mode), Mode == bvb) -> (
@@ -45,9 +47,27 @@ play_game(Game):-
     )
   ).
 
+%Game is over when a player makes three in a Row - WIN
 play_game(Game):-
-  %game over,
-  true.
+  %assert_win(Game),
+  clear_console,
+  get_game_board(Game, Board), display_game(Board),
+  get_game_player_turn(Game, Player),
+  (
+    Player == whitePlayer -> (write('# Game over. Black player won!'), nl);
+    Player == blackPlayer -> (write('# Game over. White player won!'), nl);
+
+    write('# ERROR!')
+  ),
+  pressEnterToContinue, !.
+
+%Game is over when the same board is achieved three times - DRAW
+play_game(Game):-
+  %assert_draw,
+  clear_console,
+  get_game_board(Game, Board), display_game(Board),
+  write('# Game ended in draw! The same configuration on the board was achieved three times'), nl,
+  pressEnterToContinue, !.
 
 % Game Cycle TP1
 
@@ -57,9 +77,9 @@ play_game(Game):-
 %   waitForEnter.
 
 human_play(Game, ResultantGame):-
-  get_game_board(Game, Board), get_game_turn(Game,Player),
+  get_game_board(Game, Board), get_game_player_turn(Game,Player),
 
-  clearConsole,
+  clear_console,
   display_game(Board),
   print_turn_info(Player),nl,nl.
 
