@@ -41,7 +41,7 @@ play_game(Game):-
       human_play(Game, ResultantGame),
       (
         (get_game_mode(Game,Mode), Mode == pvp) -> (play_game(ResultantGame), !);
-        pressEnterToContinue
+        print_enter_to_continue
         % (bot_play(ResultantGame, BotResultantGame), play_game(BotResultantGame))
       )
     )
@@ -59,7 +59,7 @@ play_game(Game):-
 
     write('# ERROR!')
   ),
-  pressEnterToContinue, !.
+  print_enter_to_continue, !.
 
 %Game is over when the same board is achieved three times - DRAW
 play_game(Game):-
@@ -67,7 +67,7 @@ play_game(Game):-
   clear_console,
   get_game_board(Game, Board), display_game(Board),
   write('# Game ended in draw! The same configuration on the board was achieved three times'), nl,
-  pressEnterToContinue, !.
+  print_enter_to_continue, !.
 
 % Game Cycle TP1
 
@@ -81,26 +81,42 @@ human_play(Game, ResultantGame):-
 
   clear_console,
   display_game(Board),
-  print_turn_info(Player),nl,nl.
+  print_turn_info(Player),nl,nl,
+  get_piece_source_coords(SrcLine, SrcColumn),
+  % validate_chosen_piece_ownership(SrcLine, SrcColumn, Board, Player),
+
+  clear_console,
+  display_game(Board),
+  print_turn_info(Player),nl,nl,
+  get_piece_destiny_coords(DestLine, DestColumn).
+
+
+%==============================================%
+%= @@ board validation/manipulation functions =%
+%==============================================%
 
 %===========================%
 %= @@ game input functions =%
 %===========================%
 
-get_piece_source_coords(SrcRow, SrcCol):-
+get_piece_source_coords(SrcLine, SrcColumn):-
 	write('Please insert the coordinates of the piece you wish to move and press <Enter> - example: 3f.'), nl,
-	inputCoords(SrcRow, SrcCol), nl.
+	input_coords(SrcLine, SrcColumn), nl.
 
-inputCoords(SrcRow, SrcCol):-
+get_piece_destiny_coords(SrcLine, SrcColumn):-
+  write('Please insert the destiny coordinates that piece and press <Enter>'), nl,
+  input_coords(SrcLine, SrcColumn), nl.
+
+input_coords(SrcLine, SrcColumn):-
 	% read row
-	getInt(RawSrcRow),
+	get_int(RawSrcLine),
 
 	% read column
-	getInt(RawSrcCol),
+	get_int(RawSrcColumn),
 
 	% discard enter
-	discardInputChar,
+	discard_input_char,
 
 	% process row and column
-	SrcRow is RawSrcRow-1,
-	SrcCol is RawSrcCol-49.
+	SrcLine is RawSrcLine-1,
+	SrcColumn is RawSrcColumn-49.

@@ -12,7 +12,7 @@ mainMenu:-
 
     nl,
     write('Error: invalid input.'), nl,
-    pressEnterToContinue, nl,
+    print_enter_to_continue, nl,
     mainMenu
   ).
 
@@ -60,7 +60,7 @@ gameModeMenu:-
 
     nl,
 		write('Error: invalid input.'), nl,
-		pressEnterToContinue, nl,
+		print_enter_to_continue, nl,
 		gameModeMenu
   ).
 
@@ -96,7 +96,7 @@ difficultyMenu:-
 
     nl,
 		write('Error: invalid input.'), nl,
-		pressEnterToContinue, nl,
+		print_enter_to_continue, nl,
 		difficultyMenu
   ).
 
@@ -138,7 +138,7 @@ printAbout:-
   write('=                                                  ='),nl,
   write('=                                              1/2 ='),nl,
   write('===================================================='),nl,
-	pressEnterToContinue, nl,
+	print_enter_to_continue, nl,
 
   clear_console,
   write('===================================================='),nl,
@@ -157,7 +157,7 @@ printAbout:-
   write('=  Universidade do Porto  2018/2019                ='),nl,
   write('=                                              2/2 ='),nl,
   write('===================================================='),nl,
-  pressEnterToContinue, nl.
+  print_enter_to_continue, nl.
 
 
 printHelp:-
@@ -178,7 +178,7 @@ printHelp:-
   write('=  until stopped by an occupied cell or the edge   ='),nl,
   write('=                                              1/2 ='),nl,
   write('===================================================='),nl,
-	pressEnterToContinue, nl,
+	print_enter_to_continue, nl,
 
   clear_console,
   write('===================================================='),nl,
@@ -197,4 +197,4 @@ printHelp:-
   write('=                                                  ='),nl,
   write('=                                              2/2 ='),nl,
   write('===================================================='),nl,
-  pressEnterToContinue, nl.
+  print_enter_to_continue, nl.
