@@ -21,11 +21,17 @@ createBvBGame(Game):-
 
 get_game_board([Board|_], Board).
 
+set_game_board(Board, Game, ResultantGame):-
+	setListElemAtWith(0, Board, Game, ResultantGame).
+
 get_game_mode(Game, Mode):-
 	getListElemAt(3, Game, Mode).
 
 get_game_player_turn(Game, Player):-
   getListElemAt(2, Game, Player).
+
+set_game_player_turn(Player, Game, ResultantGame):-
+	setListElemAtWith(2, Player, Game, ResultantGame).
 %====================%
 %= @@ board presets =%
 %====================%

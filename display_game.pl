@@ -21,7 +21,7 @@ print_turn_info(Player):-
 display_game(Board):-
   display_board(Board, 0),
   write_line, nl,
-  write_letters.
+  write_letters,nl.
 
 display_board([],_).
 display_board([Line|Tail], Y):-

@@ -27,8 +27,7 @@ getChar(Input):-
   get_char(Input),
   get_char(_).
 
-
-%in ascii: ascii_code(a)-48 = 1.
+%in ascii: ascii_code(1)-48 = 1.
 get_int(Input):-
 	get_code(TempInput),
 	Input is TempInput - 48.
