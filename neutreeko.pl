@@ -38,43 +38,17 @@ play_game(Game):-
     );
     %pvp or pvb
     (
-      human_play(Game, ResultantGame),
+      human_play(Game, TempGame),
+      change_turn(TempGame, ResultantGame),
       (
-        (get_game_mode(Game,Mode), Mode == pvp) -> (play_game(ResultantGame), !);
+        (get_game_mode(ResultantGame, Mode), Mode == pvp) -> (play_game(ResultantGame), !);
         nl
-        % (bot_play(ResultantGame, BotResultantGame), play_game(BotResultantGame))
+        % (bot_play(ResultantGame, BotResultantGame),
+        % change_turn(BotResultantGame, BotResultantGame),
+        % play_game(BotResultantGame))
       )
     )
   ).
-
-% %Game is over when a player makes three in a Row - WIN
-% play_game(Game):-
-%   %assert_win(Game),
-%   clear_console,
-%   get_game_board(Game, Board), display_game(Board),
-%   get_game_player_turn(Game, Player),
-%   (
-%     Player == whitePlayer -> (write('# Game over. Black player won!'), nl);
-%     Player == blackPlayer -> (write('# Game over. White player won!'), nl);
-%
-%     write('# ERROR!')
-%   ),
-%   print_enter_to_continue, !.
-%
-% %Game is over when the same board is achieved three times - DRAW
-% play_game(Game):-
-%   %assert_draw,
-%   clear_console,
-%   get_game_board(Game, Board), display_game(Board),
-%   write('# Game ended in draw! The same configuration on the board was achieved three times'), nl,
-%   print_enter_to_continue, !.
-
-% Game Cycle TP1
-
-% play_game(Game):-
-%   get_game_board(Game, Board),
-%   display_game(Board),
-%   waitForEnter.
 
 human_play(Game, ResultantGame):-
   get_game_board(Game, Board), get_game_player_turn(Game,Player),
@@ -91,9 +65,8 @@ human_play(Game, ResultantGame):-
   get_piece_destiny_coords(DestLine, DestColumn),
   validate_coordinates_different(SrcLine, SrcColumn, DestLine, DestColumn),
 
-  % validate_move(SrcLine, SrcColumn, DestLine, DestColumn, Game),
-  move_piece(SrcLine, SrcColumn, DestLine, DestColumn, Game, TempGame), !,
-	change_turn(TempGame, ResultantGame), !.
+  validate_move(SrcLine, SrcColumn, DestLine, DestColumn, Game),
+  move_piece(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame), !.
 
 
 %==============================================%
@@ -120,10 +93,27 @@ validate_coordinates_different(_, _, _, _):-
 	fail.
 
 validate_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
-  %validate move
-  get_game_player_turn(Game, Player),
-  get_game_mode(Game, Mode),
-  %Validate its player turn
+  validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Game);
+  validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Game);
+  validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game);
+  nl.
+
+validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
+  DiffLine is DestLine - SrcLine,
+  DiffColumn is DestColumn - SrcColumn,
+  DiffLine == 0, DiffColumn \= 0,
+  nl.
+
+validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
+  DiffLine is DestLine - SrcLine,
+  DiffColumn is DestColumn - SrcColumn,
+  DiffLine \= 0, DiffColumn == 0,
+  nl.
+
+validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
+  DiffLine is DestLine - SrcLine,
+  DiffColumn is DestColumn - SrcColumn,
+  DiffLine \= 0, DiffColumn \= 0, DiffLine == DiffColumn,
   nl.
 
 move_piece(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame):-

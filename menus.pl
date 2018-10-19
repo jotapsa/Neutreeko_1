@@ -53,8 +53,8 @@ gameModeMenu:-
   getChar(Input),
   (
 		Input = '1' -> startPvPGame;
-  	% Input = '2' -> startPvBGame;
-	  % Input = '3' -> startBvBGame;
+  	Input = '2' -> startPvBGame;
+	  Input = '3' -> startBvBGame;
 	  Input = '4' -> difficultyMenu;
     Input = '5';
 
