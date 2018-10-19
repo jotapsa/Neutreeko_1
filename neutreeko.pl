@@ -102,7 +102,34 @@ validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
   DiffLine is DestLine - SrcLine,
   DiffColumn is DestColumn - SrcColumn,
   DiffLine == 0, DiffColumn \= 0,
-  nl.
+  validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, DiffColumn, 0).
+
+validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex):-
+  get_game_board(Board, Game),
+  SrcColumn + CurrIndex == 4, CurrIndex \= 0;
+  SrcColumn + CurrIndex == 0, CurrIndex \= 0;
+  (
+    Direction > 0 -> (
+      CurrIndex is CurrIndex +1,
+      getMatrixElemAt(SrcLine, SrcColumn + CurrIndex, Board, SrcElem),
+      (
+        SrcElem == emptyCell -> true;
+        SrcElem \= emptyCell, SrcColumn + CurrIndex == DestColumn +1 -> true;
+        false
+      )
+    );
+    Direction < 0 -> (
+      CurrIndex is CurrIndex -1,
+      getMatrixElemAt(SrcLine, SrcColumn + CurrIndex, Board, SrcElem),
+      (
+        SrcElem == emptyCell -> true;
+        SrcElem \= emptyCell, SrcColumn + CurrIndex == DestColumn -1 -> true;
+        false
+      )
+    )
+  ),
+  validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex).
+
 
 validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
   DiffLine is DestLine - SrcLine,
