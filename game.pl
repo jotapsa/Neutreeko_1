@@ -47,3 +47,19 @@ initialBoard([
   [emptyCell,emptyCell,whiteCell,emptyCell,emptyCell],
   [emptyCell,blackCell,emptyCell,blackCell,emptyCell]
   ]).
+
+test_board_1([
+  [whiteCell,whiteCell,emptyCell,emptyCell,blackCell],
+  [blackCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,whiteCell,emptyCell,emptyCell,emptyCell]
+  ]).
+
+final_board([
+  [emptyCell,whiteCell,whiteCell,whiteCell,emptyCell],
+  [emptyCell,emptyCell,blackCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,blackCell,emptyCell,blackCell,emptyCell]
+  ]).
