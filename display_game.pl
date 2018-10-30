@@ -16,12 +16,13 @@ get_player_name(blackPlayer, 'Black').
 
 print_turn_info(Player):-
   get_player_name(Player, PlayerName),
-  write('# It is '), write(PlayerName), write(' player\'s turn to play.'), nl, !.
+  write('# It is '), write(PlayerName), write(' player\'s turn to play.'), nl.
 
-display_game(Board):-
+display_game(Board, Player):-
   display_board(Board, 0),
   write_line, nl,
-  write_letters,nl.
+  write_letters,nl,
+  print_turn_info(Player).
 
 display_board([],_).
 display_board([Line|Tail], Y):-
