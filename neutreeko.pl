@@ -177,33 +177,33 @@ input_coords(SrcLine, SrcColumn):-
 	SrcLine is RawSrcLine-1,
 	SrcColumn is RawSrcColumn-48-48-1.
 
-  checkVertical(Board, Piece) :- getMatrixElem(X, Y, Board, Piece),
+  checkVertical(Board, Piece) :- getMatrixElemAt(X, Y, Board, Piece),
                                   Piece \= 'emptyCell', X1 is X+1, X2 is X+2,
-                                  getMatrixElem(X1, Y, Board, Elem2),
-                                  getMatrixElem(X2, Y, Board, Elem3),
+                                  getMatrixElemAt(X1, Y, Board, Elem2),
+                                  getMatrixElemAt(X2, Y, Board, Elem3),
                                   Piece == Elem2, Piece == Elem3.
 
-  checkHorizontal(Board, Piece) :- getMatrixElem(X, Y, Board, Piece),
+  checkHorizontal(Board, Piece) :- getMatrixElemAt(X, Y, Board, Piece),
                                   Piece \= 'emptyCell', Y1 is Y+1, Y2 is Y+2,
-                                  getMatrixElem(X, Y1, Board, Elem2),
-                                  getMatrixElem(X, Y2, Board, Elem3),
+                                  getMatrixElemAt(X, Y1, Board, Elem2),
+                                  getMatrixElemAt(X, Y2, Board, Elem3),
                                   Piece == Elem2, Piece == Elem3.
 
   checkDiagonal(Board, Piece) :-  (
-                                  getMatrixElem(X, Y, Board, Piece),
+                                  getMatrixElemAt(X, Y, Board, Piece),
                                   Piece \= 'emptyCell',
                                   X1 is X+1, X2 is X+2, Y1 is Y+1, Y2 is Y+2,
-                                  getMatrixElem(X1, Y1, Board, Elem2),
-                                  getMatrixElem(X2, Y2, Board, Elem3),
+                                  getMatrixElemAt(X1, Y1, Board, Elem2),
+                                  getMatrixElemAt(X2, Y2, Board, Elem3),
                                     Piece == Elem2, Piece == Elem3
                                     ) ;
 
                                   (
-                                  getMatrixElem(X, Y, Board, Piece),
+                                  getMatrixElemAt(X, Y, Board, Piece),
                                   Piece \= 'emptyCell',
                                   X1 is X+1, X2 is X+2, Y1 is Y-1, Y2 is Y-2,
-                                  getMatrixElem(X1, Y1, Board, Elem2),
-                                  getMatrixElem(X2, Y2, Board, Elem3),
+                                  getMatrixElemAt(X1, Y1, Board, Elem2),
+                                  getMatrixElemAt(X2, Y2, Board, Elem3),
                                     Piece == Elem2, Piece == Elem3
                                     ).
 

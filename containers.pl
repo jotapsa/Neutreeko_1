@@ -7,7 +7,7 @@
 %= @@ lists and matrices manipulation =%
 %======================================%
 
-getMatrixElem(Row,Col, Matrix,Elem) :-
+getMatrixElemAt(Row, Col, Matrix,Elem) :-
    nth0(Row,Matrix,RowList),
    nth0(Col,RowList,Elem).
 
