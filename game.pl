@@ -5,13 +5,13 @@
 % Game(2) - Game mode
 
 createPvPGame(Game):-
-	initialBoard(Board),
+	initial_board(Board),
 	Game = [Board, blackPlayer, pvp], !.
 createPvBGame(Game):-
-	initialBoard(Board),
+	initial_board(Board),
 	Game = [Board, blackPlayer, pvb], !.
 createBvBGame(Game):-
-	initialBoard(Board),
+	initial_board(Board),
 	Game = [Board, blackPlayer, bvb], !.
 
 %========================%
@@ -40,26 +40,26 @@ set_bot_diff(Level):-
 %= @@ board presets =%
 %====================%
 
-initialBoard([
-  [emptyCell,whiteCell,emptyCell,whiteCell,emptyCell],
-  [emptyCell,emptyCell,blackCell,emptyCell,emptyCell],
+initial_board([
+  [emptyCell,whitePiece,emptyCell,whitePiece,emptyCell],
+  [emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
-  [emptyCell,emptyCell,whiteCell,emptyCell,emptyCell],
-  [emptyCell,blackCell,emptyCell,blackCell,emptyCell]
+  [emptyCell,emptyCell,whitePiece,emptyCell,emptyCell],
+  [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
   ]).
 
 test_board_1([
-  [whiteCell,whiteCell,emptyCell,emptyCell,blackCell],
-  [blackCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [whitePiece,whitePiece,emptyCell,emptyCell,blackPiece],
+  [blackPiece,emptyCell,emptyCell,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
-  [emptyCell,whiteCell,emptyCell,emptyCell,emptyCell]
+  [emptyCell,whitePiece,emptyCell,emptyCell,emptyCell]
   ]).
 
 final_board([
-  [emptyCell,whiteCell,whiteCell,whiteCell,emptyCell],
-  [emptyCell,emptyCell,blackCell,emptyCell,emptyCell],
+  [emptyCell,whitePiece,whitePiece,whitePiece,emptyCell],
+  [emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
-  [emptyCell,blackCell,emptyCell,blackCell,emptyCell]
+  [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
   ]).

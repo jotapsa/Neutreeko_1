@@ -1,8 +1,10 @@
+:-use_module(library(lists)).
 :-include('utilities.pl').
 :-include('containers.pl').
 :-include('menus.pl').
 :-include('display_game.pl').
 :-include('game.pl').
+:-include('bot.pl').
 
 play:-
   main_menu.
@@ -13,8 +15,8 @@ player(blackPlayer).
 piece(whitePiece).
 piece(blackPiece).
 
-piece_owner(whiteCell, whitePlayer).
-piece_owner(blackCell, blackPlayer).
+piece_owner(whitePiece, whitePlayer).
+piece_owner(blackPiece, blackPlayer).
 
 :-dynamic bot_diff/1.
 bot_diff(easy).
@@ -231,5 +233,5 @@ input_coords(SrcLine, SrcColumn):-
 game_over(Board, Winner) :-(checkVertical(Board, Piece) ;
                             checkHorizontal(Board, Piece) ;
                             checkDiagonal(Board, Piece)), (
-                            Piece == 'blackCell' -> Winner = 'blackPlayer' ;
-                              ( Piece == 'whiteCell' -> Winner = 'whitePlayer' ; false) ).
+                            Piece == 'blackPiece' -> Winner = 'blackPlayer' ;
+                              ( Piece == 'whitePiece' -> Winner = 'whitePlayer' ; false) ).

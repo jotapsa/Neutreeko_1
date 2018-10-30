@@ -7,8 +7,8 @@ write_spaces:-write('   |    |     |     |     |     |').
 write_line:-write('   ------------------------------').
 
 get_cell_symbol(emptyCell, ' ').
-get_cell_symbol(whiteCell, 'O').
-get_cell_symbol(blackCell, '#').
+get_cell_symbol(whitePiece, 'O').
+get_cell_symbol(blackPiece, '#').
 get_cell_symbol(_, '?').
 
 get_player_name(whitePlayer, 'White').
