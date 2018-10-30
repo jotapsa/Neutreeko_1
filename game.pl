@@ -32,6 +32,11 @@ get_game_player_turn(Game, Player):-
 
 set_game_player_turn(Player, Game, ResultantGame):-
 	setListElemAtWith(2, Player, Game, ResultantGame).
+
+set_bot_diff(Level):-
+  nonvar(Level),
+  retract(bot_diff(_)),
+  asserta(bot_diff(Level)).
 %====================%
 %= @@ board presets =%
 %====================%

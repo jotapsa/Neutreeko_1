@@ -4,8 +4,8 @@
 :-include('display_game.pl').
 :-include('game.pl').
 
-neutreeko:-
-  mainMenu.
+play:-
+  main_menu.
 
 player(whitePlayer).
 player(blackPlayer).
@@ -15,6 +15,9 @@ piece(blackPiece).
 
 piece_owner(whiteCell, whitePlayer).
 piece_owner(blackCell, blackPlayer).
+
+:-dynamic bot_diff/1.
+bot_diff(easy).
 
 %p = player, b = bot
 game_mode(pvp).

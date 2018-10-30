@@ -1,24 +1,24 @@
 % Menus
 % 50 columns so to center text use the 25th column
 
-mainMenu:-
-  printMainMenu,
+main_menu:-
+  print_main_menu,
   getChar(Input),
   (
-    Input = '1' -> gameModeMenu, mainMenu;
-    Input = '2' -> printHelp, mainMenu;
-    Input = '3' -> printAbout, mainMenu;
+    Input = '1' -> game_mode_menu, main_menu;
+    Input = '2' -> print_help, main_menu;
+    Input = '3' -> print_about, main_menu;
     Input = '4';
 
     nl,
     write('Error: invalid input.'), nl,
     print_enter_to_continue, nl,
-    mainMenu
+    main_menu
   ).
 
-%TODO: Center printMainMenu & fix other menus
+%TODO: Center printmain_menu & fix other menus
 
-printMainMenu:-
+print_main_menu:-
   clear_console,
   write('===================================================='),nl,
   write('=                  ..:: Menu ::..                  ='),nl,
@@ -38,33 +38,33 @@ printMainMenu:-
   write('===================================================='),nl,
   write('Choose an option: '),nl.
 
-startPvPGame:-
+start_pvp_game:-
 	createPvPGame(Game),
 	play_game(Game).
-startPvBGame:-
+start_pvb_game:-
   createPvBGame(Game),
 	play_game(Game).
-startBvBGame:-
+start_bvb_game:-
   createBvBGame(Game),
   play_game(Game).
 
-gameModeMenu:-
-  printgameModeMenu,
+game_mode_menu:-
+  print_game_mode_menu,
   getChar(Input),
   (
-		Input = '1' -> startPvPGame;
-  	Input = '2' -> startPvBGame;
-	  Input = '3' -> startBvBGame;
-	  Input = '4' -> difficultyMenu;
+		Input = '1' -> start_pvp_game;
+  	Input = '2' -> start_pvb_game;
+	  Input = '3' -> start_bvb_game;
+	  Input = '4' -> difficulty_menu;
     Input = '5';
 
     nl,
 		write('Error: invalid input.'), nl,
 		print_enter_to_continue, nl,
-		gameModeMenu
+		game_mode_menu
   ).
 
-printgameModeMenu:-
+print_game_mode_menu:-
   clear_console,
   write('===================================================='),nl,
   write('=                ..:: Game Mode ::..               ='),nl,
@@ -85,22 +85,22 @@ printgameModeMenu:-
   write('===================================================='),nl,
   write('Choose an option: '),nl.
 
-difficultyMenu:-
-  printdifficultyMenu,
+difficulty_menu:-
+  print_difficulty_menu,
   getChar(Input),
   (
-    % Input = '1' -> setBotDifficulty(1), gameModeMenu;
-    % Input = '2' -> setBotDifficulty(2), gameModeMenu;
-    % Input = '3' -> setBotDifficulty(3), gameModeMenu;
+    Input = '1' -> set_bot_diff(easy), game_mode_menu;
+    Input = '2' -> set_bot_diff(medium), game_mode_menu;
+    Input = '3' -> set_bot_diff(hard), game_mode_menu;
     Input = '4';
 
     nl,
 		write('Error: invalid input.'), nl,
 		print_enter_to_continue, nl,
-		difficultyMenu
+		difficulty_menu
   ).
 
-printdifficultyMenu:-
+print_difficulty_menu:-
   clear_console,
   write('===================================================='),nl,
   write('=           ..:: Computer Difficulty ::..          ='),nl,
@@ -120,7 +120,7 @@ printdifficultyMenu:-
   write('===================================================='),nl,
   write('Choose an option: '),nl.
 
-printAbout:-
+print_about:-
   clear_console,
   write('===================================================='),nl,
   write('=                  ..:: About ::..                 ='),nl,
@@ -160,7 +160,7 @@ printAbout:-
   print_enter_to_continue, nl.
 
 
-printHelp:-
+print_help:-
   clear_console,
   write('===================================================='),nl,
   write('=               ..:: How To Play ::..              ='),nl,
