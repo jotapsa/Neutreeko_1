@@ -11,20 +11,8 @@ getMatrixElem(Row,Col, Matrix,Elem) :-
    nth0(Row,Matrix,RowList),
    nth0(Col,RowList,Elem).
 
-% %%% 1. element row; 2. element column; 3. matrix; 4. query element.
-% getMatrixElemAt(1, ElemCol, [ListAtTheHead|_], Elem):-
-% 	getListElemAt(ElemCol, ListAtTheHead, Elem).
-% getMatrixElemAt(ElemRow, ElemCol, [_|RemainingLists], Elem):-
-% 	ElemRow > 1,
-% 	ElemRow1 is ElemRow-1,
-% 	getMatrixElemAt(ElemRow1, ElemCol, RemainingLists, Elem).
-%
-% %%% 1. element position; 2. list; 3. query element.
-% getListElemAt(1, [ElemAtTheHead|_], ElemAtTheHead).
-% getListElemAt(Pos, [_|RemainingElems], Elem):-
-% 	Pos > 1,
-% 	Pos1 is Pos-1,
-% 	getListElemAt(Pos1, RemainingElems, Elem).
+getListElemAt(N, List, Elem):-
+  nth0(N, List, Elem).
 
 %%% 1. element row; 2. element column; 3. element to use on replacement; 3. current matrix; 4. resultant matrix.
 setMatrixElemAtWith(0, ElemCol, NewElem, [RowAtTheHead|RemainingRows], [NewRowAtTheHead|RemainingRows]):-
