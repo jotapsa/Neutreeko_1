@@ -29,44 +29,24 @@ play_game(Game):-
   false, !.
 
 play_game(Game):-
-  (
-    %bvb
-    (get_game_mode(Game, Mode), Mode == bvb) -> (
-      get_game_board(Game, Board), get_game_player_turn(Game,Player),
-      display_game(Board),
-      !
-    );
-    %pvp or pvb
-    (
-      human_play(Game, TempGame),
-      change_turn(TempGame, ResultantGame),
-      (
-        (get_game_mode(ResultantGame, Mode), Mode == pvp) -> (play_game(ResultantGame), !);
-        nl
-        % (bot_play(ResultantGame, BotResultantGame),
-        % change_turn(BotResultantGame, BotResultantGame),
-        % play_game(BotResultantGame))
-      )
-    )
-  ).
+  human_play(Game, TempGame),
+  play_game(TempGame).
 
 human_play(Game, ResultantGame):-
   get_game_board(Game, Board), get_game_player_turn(Game,Player),
 
   clear_console,
-  display_game(Board),
-  print_turn_info(Player),
+  display_game(Board, Player),
   get_piece_source_coords(SrcLine, SrcColumn),
   validate_chosen_piece_ownership(SrcLine, SrcColumn, Board, Player),
 
   clear_console,
-  display_game(Board),
-  print_turn_info(Player),
+  display_game(Board, Player),
   get_piece_destiny_coords(DestLine, DestColumn),
   validate_coordinates_different(SrcLine, SrcColumn, DestLine, DestColumn),
 
   validate_move(SrcLine, SrcColumn, DestLine, DestColumn, Game),
-  move_piece(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame), !.
+  move(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame), !.
 
 
 %==============================================%
@@ -94,9 +74,8 @@ validate_coordinates_different(_, _, _, _):-
 
 validate_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
   validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Game);
-  validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Game);
-  validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game);
-  nl.
+  validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Game).
+  % validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game).
 
 validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
   DiffLine is DestLine - SrcLine,
@@ -128,22 +107,60 @@ validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, C
       )
     )
   ),
-  validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex).
+  validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex).
 
 
 validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
   DiffLine is DestLine - SrcLine,
   DiffColumn is DestColumn - SrcColumn,
   DiffLine \= 0, DiffColumn == 0,
-  nl.
+  validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, DiffLine, 0).
 
-validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
-  DiffLine is DestLine - SrcLine,
-  DiffColumn is DestColumn - SrcColumn,
-  DiffLine \= 0, DiffColumn \= 0, DiffLine == DiffColumn,
-  nl.
+validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex):-
+  get_game_board(Board, Game),
+  SrcLine + CurrIndex == 4, CurrIndex \= 0;
+  SrcLine + CurrIndex == 0, CurrIndex \= 0;
+  (
+    Direction > 0 -> (
+      CurrIndex is CurrIndex +1,
+      getMatrixElemAt(SrcLine + CurrIndex, SrcColumn, Board, SrcElem),
+      (
+        SrcElem == emptyCell -> true;
+        SrcElem \= emptyCell, SrcLine + CurrIndex == DestColumn +1 -> true;
+        false
+      )
+    );
+    Direction < 0 -> (
+      CurrIndex is CurrIndex -1,
+      getMatrixElemAt(SrcLine + CurrIndex, SrcColumn, Board, SrcElem),
+      (
+        SrcElem == emptyCell -> true;
+        SrcElem \= emptyCell, SrcLine + CurrIndex == DestColumn -1 -> true;
+        false
+      )
+    )
+  ),
+  validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex).
 
-move_piece(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame):-
+% validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
+%   DiffLine is DestLine - SrcLine,
+%   DiffColumn is DestColumn - SrcColumn,
+%   DiffLine \= 0, DiffColumn \= 0, DiffLine == DiffColumn,
+%   validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, DiffLine, DiffColumn, 0, 0).
+
+% validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, DiffLine, DiffColumn, CurrIndexLine, CurrIndexColumn):-
+%   get_game_board(Board, Game),
+%   SrcLine + CurrIndexLine == 4, CurrIndexLine \= 0;
+%   SrcLine + CurrIndexLine == 0, CurrIndexLine \= 0;
+%   SrcColumn + CurrIndexColumn == 4, CurrIndexColumn \= 0;
+%   SrcColumn + CurrIndexColumn == 0, CurrIndexColumn \= 0;
+%   (
+%
+%   )
+
+
+
+move(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame):-
   get_game_board(Game, Board),
   getMatrixElemAt(SrcLine, SrcColumn, Board, SrcElem),
   setMatrixElemAtWith(SrcLine, SrcColumn, emptyCell, Board, TempBoard),
