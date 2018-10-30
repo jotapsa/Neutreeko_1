@@ -16,19 +16,16 @@ piece(blackPiece).
 piece_owner(whiteCell, whitePlayer).
 piece_owner(blackCell, blackPlayer).
 
-% currentPlayerOwnsCell(Row, Col, Game):-
-% 	getGameBoard(Game, Board), getGamePlayerTurn(Game, Player),
-% 	getMatrixElemAt(Row, Col, Board, Cell), piece_owner(Cell, Player).
-
 %p = player, b = bot
-gameMode(pvp).
-gameMode(pvb).
-gameMode(bvb).
-
+game_mode(pvp).
+game_mode(pvb).
+game_mode(bvb).
 
 play_game(Game):-
-  % assert_draw(Game)
-  % assert_win(Game),
+  % game_over(board, winner), !, announce(result).
+  false, !.
+
+play_game(Game):-
   (
     %bvb
     (get_game_mode(Game, Mode), Mode == bvb) -> (
