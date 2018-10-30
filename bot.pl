@@ -22,4 +22,11 @@ board_weight(4,3,250).
 board_weight(4,4,100).
 
 
-value(Board, Player, Value):-
+%We need to somehow initialize Value at 0
+value([], Player, Value).
+value([Line|Tail], Player, Value):-
+  evaluate_line_value(Line, Player, LiveValue),
+  Value is Value + LineValue,
+
+evaluate_line_value([], Player, LineValue).
+evaluate_line_value([Column|Columns], Player, LineValue):-
