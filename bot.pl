@@ -1,9 +1,9 @@
-%min max with alpha beta pruning
-piece_value(emptyCell, 0).
+%min maColIterator with alpha beta pruning
+piece_value(emptRowIteratorCell, 0).
 piece_value(whitePiece, 1).
 piece_value(blackPiece, -1).
 
-%board_weight(X, Y, Value)
+%board_weight(ColIterator, RowIterator, Value)
 board_weight(0,0,100).
 board_weight(0,1,250).
 board_weight(0,2,500).
@@ -26,28 +26,122 @@ board_weight(4,4,100).
 
 
 %We need to somehow initialize Value at 0
-value(Board, Player, Value):-
-  evaluate_board(Board, Value, 0).
+value(Board, PlaRowIteratorer, Value):-
+  evaluate_board_pieces(Board, PiecesValue, 0),
+  evaluate_board_state(Board, StateValue, 0),
+  Value is PiecesValue + StateValue.
 
-evaluate_board(Board, 0, Iterator):-
-  Iterator>4.
+evaluate_board_pieces(Board, 0, RowIterator):-
+  RowIterator>4.
 
-evaluate_board(Board, Value, Iterator):-
-  Iterator>=5;
-  nth0(Iterator, Board, Line), !,
-  evaluate_line(Line, LineValue, Iterator, 0),
-  IteratorNext is Iterator+1,
-  evaluate_board(Board, RemainingValue, IteratorNext),
+evaluate_board_pieces(Board, Value, RowIterator):-
+  nth0(RowIterator, Board, Line), !,
+  evaluate_line_pieces(Line, LineValue, RowIterator, 0),
+  RowIteratorNext is RowIterator+1,
+  evaluate_board_pieces(Board, RemainingValue, RowIteratorNext),
   Value is LineValue+RemainingValue.
 
-evaluate_line(Line, 0, _, Column):-
-  Column>4.
+evaluate_line_pieces(Line, 0, _, ColIterator):-
+  ColIterator>4.
 
-evaluate_line(Line, LineValue, Row, Column):-
-  Column>=5;
-  nth0(Column, Line, Piece), !,
+evaluate_line_pieces(Line, LineValue, RowIterator, ColIterator):-
+  nth0(ColIterator, Line, Piece), !,
   piece_value(Piece, PieceValue),
-  board_weight(Row, Column, Weight),
-  ColumnNext is Column+1,
-  evaluate_line(Line, RemainingValue, Row, ColumnNext),
+  board_weight(RowIterator, Column, Weight),
+  ColIteratorNext is ColIterator+1,
+  evaluate_line_pieces(Line, RemainingValue, RowIterator, ColIteratorNext),
   LineValue is PieceValue*Weight + RemainingValue.
+
+evaluate_board_state(Board, 0, RowIterator):-
+  RowIterator>4.
+
+evaluate_board_state(Board, Value, RowIterator):-
+  nth0(RowIterator, Board, Line), !,
+  evaluate_line_state(Line, LineValue, RowIterator, 0),
+  RowIteratorNext is RowIterator+1,
+  evaluate_board_state(Board, RemainingValue, RowIteratorNext),
+  Value is LineValue+RemainingValue.
+
+evaluate_line_state(Line, 0, _, ColIterator):-
+  ColIterator>4.
+
+evaluate_line_state(Line, LineValue, RowIterator, ColIterator):-
+  TempValue is 0,
+  SearchRow is RowIterator+1, SearchCol is ColIterator,
+  ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(SearchRow, Board, Line), nth0(SearchCol, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+    piece_value(Piece1, PieceValue), TempValue is TempValue + PieceValue * 5000
+    )
+  ),
+  SearchRow is RowIterator+1, SearchCol is ColIterator+1,
+  ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(SearchRow, Board, Line), nth0(SearchCol, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+    piece_value(Piece1, PieceValue), TempValue is TempValue + PieceValue * 5000
+    )
+  ),
+  SearchRow is RowIterator, SearchCol is ColIterator+1,
+  ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(SearchRow, Board, Line), nth0(SearchCol, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+    piece_value(Piece1, PieceValue), TempValue is TempValue + PieceValue * 5000
+    )
+  ),
+  SearchRow is RowIterator-1, SearchCol is ColIterator+1,
+  ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(SearchRow, Board, Line), nth0(SearchCol, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+    piece_value(Piece1, PieceValue), TempValue is TempValue + PieceValue * 5000
+    )
+  ),
+  SearchRow is RowIterator-1, SearchCol is ColIterator,
+  ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(SearchRow, Board, Line), nth0(SearchCol, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+    piece_value(Piece1, PieceValue), TempValue is TempValue + PieceValue * 5000
+    )
+  ),
+  SearchRow is RowIterator-1, SearchCol is ColIterator-1,
+  ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(SearchRow, Board, Line), nth0(SearchCol, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+    piece_value(Piece1, PieceValue), TempValue is TempValue + PieceValue * 5000
+    )
+  ),
+  SearchRow is RowIterator, SearchCol is ColIterator-1,
+  ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(SearchRow, Board, Line), nth0(SearchCol, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+    piece_value(Piece1, PieceValue), TempValue is TempValue + PieceValue * 5000
+    )
+  ),
+  SearchRow is RowIterator+1, SearchCol is ColIterator-1,
+  ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(SearchRow, Board, Line), nth0(SearchCol, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+    piece_value(Piece1, PieceValue), TempValue is TempValue + PieceValue * 5000
+    )
+  ),
+  ColIteratorNext is ColIterator+1,
+  evaluate_line_state(Line, RemainingValue, RowIterator, ColIteratorNext),
+  LineValue is 1 + RemainingValue.
+
+% evaluate_board_state(Board, StateValue):-
+%   StateValue is 0,
+%   ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(RowIterator+1, Board, Line), nth0(ColIterator, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+%     piece_value(Piece1, PieceValue), StateValue is StateValue + PieceValue * 5000
+%     )
+%   ),
+%   ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(RowIterator+1, Board, Line), nth0(ColIterator+1, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+%     piece_value(Piece1, PieceValue), StateValue is StateValue + PieceValue * 5000
+%     )
+%   ),
+%   ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(RowIterator, Board, Line), nth0(ColIterator+1, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+%     piece_value(Piece1, PieceValue), StateValue is StateValue + PieceValue * 5000
+%     )
+%   ),
+%   ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(RowIterator-1, Board, Line), nth0(ColIterator+1, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+%     piece_value(Piece1, PieceValue), StateValue is StateValue + PieceValue * 5000
+%     )
+%   ),
+%   ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(RowIterator-1, Board, Line), nth0(ColIterator, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+%     piece_value(Piece1, PieceValue), StateValue is StateValue + PieceValue * 5000
+%     )
+%   ),
+%   ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(RowIterator-1, Board, Line), nth0(ColIterator-1, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+%     piece_value(Piece1, PieceValue), StateValue is StateValue + PieceValue * 5000
+%     )
+%   ),
+%   ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(RowIterator, Board, Line), nth0(ColIterator-1, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+%     piece_value(Piece1, PieceValue), StateValue is StateValue + PieceValue * 5000
+%     )
+%   ),
+%   ((nth0(RowIterator, Board, Line), nth0(ColIterator, Line, Piece1), nth0(RowIterator+1, Board, Line), nth0(ColIterator-1, Line, Piece2), Piece1 \= emptRowIteratorCell, Piece1==Piece2) ->(
+%     piece_value(Piece1, PieceValue), StateValue is StateValue + PieceValue * 5000
+%     )
+%   ).
