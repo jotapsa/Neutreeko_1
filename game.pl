@@ -56,6 +56,24 @@ test_board_1([
   [emptyCell,whitePiece,emptyCell,emptyCell,emptyCell]
   ]).
 
+
+%test_board_2 state expected value - 10000
+test_board_2([
+  [whitePiece,whitePiece,blackPiece,emptyCell,blackPiece],
+  [whitePiece,emptyCell,emptyCell,emptyCell,blackPiece],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell]
+  ]).
+
+test_board_3([
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,blackPiece],
+  [whitePiece,whitePiece,emptyCell,emptyCell,blackPiece]
+  ]).
+
 white_win_board([
   [emptyCell,whitePiece,whitePiece,whitePiece,emptyCell],
   [emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
