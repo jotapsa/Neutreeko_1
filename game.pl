@@ -5,13 +5,13 @@
 % Game(2) - Game mode
 
 createPvPGame(Game):-
-	initialBoard(Board),
+	initial_board(Board),
 	Game = [Board, blackPlayer, pvp], !.
 createPvBGame(Game):-
-	initialBoard(Board),
+	initial_board(Board),
 	Game = [Board, blackPlayer, pvb], !.
 createBvBGame(Game):-
-	initialBoard(Board),
+	initial_board(Board),
 	Game = [Board, blackPlayer, bvb], !.
 
 %========================%
@@ -40,10 +40,52 @@ set_bot_diff(Level):-
 %= @@ board presets =%
 %====================%
 
-initialBoard([
-  [emptyCell,whiteCell,emptyCell,whiteCell,emptyCell],
-  [emptyCell,emptyCell,blackCell,emptyCell,emptyCell],
+initial_board([
+  [emptyCell,whitePiece,emptyCell,whitePiece,emptyCell],
+  [emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
-  [emptyCell,emptyCell,whiteCell,emptyCell,emptyCell],
-  [emptyCell,blackCell,emptyCell,blackCell,emptyCell]
+  [emptyCell,emptyCell,whitePiece,emptyCell,emptyCell],
+  [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
+  ]).
+
+test_board_1([
+  [whitePiece,whitePiece,emptyCell,emptyCell,blackPiece],
+  [blackPiece,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,whitePiece,emptyCell,emptyCell,emptyCell]
+  ]).
+
+
+%test_board_2 state expected value - 10000
+test_board_2([
+  [whitePiece,whitePiece,blackPiece,emptyCell,blackPiece],
+  [whitePiece,emptyCell,emptyCell,emptyCell,blackPiece],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell]
+  ]).
+
+test_board_3([
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,blackPiece],
+  [whitePiece,whitePiece,emptyCell,emptyCell,blackPiece]
+  ]).
+
+white_win_board([
+  [emptyCell,whitePiece,whitePiece,whitePiece,emptyCell],
+  [emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
+  ]).
+
+black_win_board([
+  [emptyCell,whitePiece,emptyCell,whitePiece,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [whitePiece,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,blackPiece,blackPiece,blackPiece,emptyCell]
   ]).

@@ -1,4 +1,3 @@
-:- use_module(library(lists)).
 %======================================%
 %= @@ lists and matrices constructors =%
 %======================================%
