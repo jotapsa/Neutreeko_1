@@ -82,55 +82,44 @@ validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
   DiffColumn is DestColumn - SrcColumn,
   DiffLine == 0, DiffColumn \= 0,
   (DiffColumn > 0 -> Direction is 1 ; Direction is -1),
-  validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, 0).
-
-validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex):-
   get_game_board(Board, Game),
+  validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, 0).
 
+validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, CurrIndex):-
   NewIndex is CurrIndex+Direction,
   NextColumn is SrcColumn+NewIndex,
   getMatrixElemAt(SrcLine, NextColumn , Board, NextElem),
   (
-    NextElem == emptyCell -> (NextColumn == DestColumn ->
-                                (NextColumn is NextColumn+Direction,
-                                 getMatrixElemAt(SrcLine, NextColumn , Board, NextElem),
-                                 NextElem == emptyCell -> false ; true)
-                                 ;
-                                 validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, NewIndex)
-                             ) ; false
+    NextElem == 'emptyCell' -> (NextColumn == DestColumn ->
+                                  (AfterColumn is NextColumn+Direction,
+                                    getMatrixElemAt(SrcLine, AfterColumn , Board, NextElem),
+                                    NextElem == 'emptyCell' -> false ; true
+                                  )
+                                 ; validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, NewIndex)
+                               ) ; false
   ).
 
 validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
   DiffLine is DestLine - SrcLine,
   DiffColumn is DestColumn - SrcColumn,
   DiffLine \= 0, DiffColumn == 0,
-  validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, DiffLine, 0).
-
-validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex):-
+  (DiffLine > 0 -> Direction is 1 ; Direction is -1),
   get_game_board(Board, Game),
-  SrcLine + CurrIndex == 4, CurrIndex \= 0;
-  SrcLine + CurrIndex == 0, CurrIndex \= 0;
+  validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, 0).
+
+validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, CurrIndex):-
+  NewIndex is CurrIndex+Direction,
+  NextLine is SrcLine+NewIndex,
+  getMatrixElemAt(NextLine, SrcColumn , Board, NextElem),
   (
-    Direction > 0 -> (
-      CurrIndex is CurrIndex +1,
-      getMatrixElemAt(SrcLine + CurrIndex, SrcColumn, Board, SrcElem),
-      (
-        SrcElem == emptyCell -> true;
-        SrcElem \= emptyCell, SrcLine + CurrIndex == DestColumn +1 -> true;
-        false
-      )
-    );
-    Direction < 0 -> (
-      CurrIndex is CurrIndex -1,
-      getMatrixElemAt(SrcLine + CurrIndex, SrcColumn, Board, SrcElem),
-      (
-        SrcElem == emptyCell -> true;
-        SrcElem \= emptyCell, SrcLine + CurrIndex == DestColumn -1 -> true;
-        false
-      )
-    )
-  ),
-  validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex).
+    NextElem == 'emptyCell' -> (NextLine == DestLine ->
+                                  (AfterLine is NextLine+Direction,
+                                    getMatrixElemAt(AfterLine, DestColumn , Board, NextElem),
+                                    NextElem == 'emptyCell' -> false ; true
+                                  )
+                                 ; validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, NewIndex)
+                               ) ; false
+  ).
 
 % validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
 %   DiffLine is DestLine - SrcLine,
