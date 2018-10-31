@@ -1,4 +1,5 @@
 :-use_module(library(lists)).
+:-use_module(library(random)).
 :-include('utilities.pl').
 :-include('containers.pl').
 :-include('menus.pl').

@@ -56,10 +56,18 @@ test_board_1([
   [emptyCell,whitePiece,emptyCell,emptyCell,emptyCell]
   ]).
 
-final_board([
+white_win_board([
   [emptyCell,whitePiece,whitePiece,whitePiece,emptyCell],
   [emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
   [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
+  ]).
+
+black_win_board([
+  [emptyCell,whitePiece,emptyCell,whitePiece,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [whitePiece,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,blackPiece,blackPiece,blackPiece,emptyCell]
   ]).
