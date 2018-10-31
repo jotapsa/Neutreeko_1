@@ -92,8 +92,8 @@ validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, 
   (
     NextElem == 'emptyCell' -> (NextColumn == DestColumn ->
                                   (AfterColumn is NextColumn+Direction,
-                                    getMatrixElemAt(SrcLine, AfterColumn , Board, NextElem),
-                                    NextElem == 'emptyCell' -> false ; true
+                                    getMatrixElemAt(SrcLine, AfterColumn , Board, NextElem) ->
+                                      (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
                                  ; validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, NewIndex)
                                ) ; false
@@ -114,8 +114,8 @@ validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, 
   (
     NextElem == 'emptyCell' -> (NextLine == DestLine ->
                                   (AfterLine is NextLine+Direction,
-                                    getMatrixElemAt(AfterLine, DestColumn , Board, NextElem),
-                                    NextElem == 'emptyCell' -> false ; true
+                                    getMatrixElemAt(AfterLine, DestColumn , Board, NextElem) ->
+                                      (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
                                  ; validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, NewIndex)
                                ) ; false
