@@ -87,15 +87,17 @@ validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
 validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex):-
   get_game_board(Board, Game),
 
-  CurrIndex is CurrIndex+Direction,
-  NextColumn is SrcColumn+CurrIndex,
+  NewIndex is CurrIndex+Direction,
+  NextColumn is SrcColumn+NewIndex,
   getMatrixElemAt(SrcLine, NextColumn , Board, NextElem),
   (
     NextElem == emptyCell -> (NextColumn == DestColumn ->
                                 (NextColumn is NextColumn+Direction,
                                  getMatrixElemAt(SrcLine, NextColumn , Board, NextElem),
-                                 NextElem == emptyCell -> false ; true) ;
-                              validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, CurrIndex)) ; false
+                                 NextElem == emptyCell -> false ; true)
+                                 ;
+                                 validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, Direction, NewIndex)
+                             ) ; false
   ).
 
 validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
