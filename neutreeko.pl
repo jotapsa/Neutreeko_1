@@ -121,22 +121,17 @@ validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, 
                                ) ; false
   ).
 
-% validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
-%   DiffLine is DestLine - SrcLine,
-%   DiffColumn is DestColumn - SrcColumn,
-%   DiffLine \= 0, DiffColumn \= 0, DiffLine == DiffColumn,
-%   validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, DiffLine, DiffColumn, 0, 0).
+validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
+  DiffLine is DestLine - SrcLine,
+  DiffColumn is DestColumn - SrcColumn,
+  DiffLine \= 0, DiffColumn \= 0, DiffLine == DiffColumn,
+  (DiffLine > 0 -> DirectionLine is 1 ; DirectionLine is -1),
+  (DiffColumn > 0 -> DirectionColumn is 1 ; DirectionColumn is -1),
+  get_game_board(Board, Game),
+  validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, 0).
 
-% validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Game, DiffLine, DiffColumn, CurrIndexLine, CurrIndexColumn):-
-%   get_game_board(Board, Game),
-%   SrcLine + CurrIndexLine == 4, CurrIndexLine \= 0;
-%   SrcLine + CurrIndexLine == 0, CurrIndexLine \= 0;
-%   SrcColumn + CurrIndexColumn == 4, CurrIndexColumn \= 0;
-%   SrcColumn + CurrIndexColumn == 0, CurrIndexColumn \= 0;
-%   (
-%
-%   )
-
+validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, CurrIndex):-
+  .
 
 
 move(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame):-
