@@ -77,9 +77,9 @@ validate_coordinates_different(_, _, _, _):-
 
 validate_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
   validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Board);
-  validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Board).
-  % validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game).
-%
+  validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Board);
+  validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Board).
+
 validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
   DiffLine is DestLine - SrcLine,
   DiffColumn is DestColumn - SrcColumn,
@@ -90,6 +90,7 @@ validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
 validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, CurrIndex):-
   NewIndex is CurrIndex+Direction,
   NextColumn is SrcColumn+NewIndex,
+
   getMatrixElemAt(SrcLine, NextColumn, Board, NextElem),
   (
     NextElem == 'emptyCell' -> (NextColumn == DestColumn ->
@@ -111,7 +112,8 @@ validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
 validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, CurrIndex):-
   NewIndex is CurrIndex+Direction,
   NextLine is SrcLine+NewIndex,
-  getMatrixElemAt(NextLine, SrcColumn , Board, NextElem),
+
+  getMatrixElemAt(NextLine, SrcColumn, Board, NextElem),
   (
     NextElem == 'emptyCell' -> (NextLine == DestLine ->
                                   (AfterLine is NextLine+Direction,
@@ -121,19 +123,36 @@ validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, 
                                  ; validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, NewIndex)
                                ) ; false
   ).
-% %
-% % validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Game):-
-% %   DiffLine is DestLine - SrcLine,
-% %   DiffColumn is DestColumn - SrcColumn,
-% %   DiffLine \= 0, DiffColumn \= 0, DiffLine == DiffColumn,
-% %   (DiffLine > 0 -> DirectionLine is 1 ; DirectionLine is -1),
-% %   (DiffColumn > 0 -> DirectionColumn is 1 ; DirectionColumn is -1),
-% %   get_game_board(Board, Game),
-% %   validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, 0).
-% %
-% % validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, CurrIndex):-
-% %   .
-%
+
+validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
+  DiffLine is DestLine - SrcLine,
+  DiffColumn is DestColumn - SrcColumn,
+  DiffLine \= 0, DiffColumn \= 0,
+  DiffLineAbs is abs(DiffLine), DiffColumnAbs is abs(DiffColumn),
+  DiffLineAbs == DiffColumnAbs,
+  (DiffLine > 0 -> DirectionLine is 1 ; DirectionLine is -1),
+  (DiffColumn > 0 -> DirectionColumn is 1 ; DirectionColumn is -1),
+  validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, 0,0).
+
+validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, CurrIndexLine, CurrIndexColumn):-
+  NewIndexLine is CurrIndexLine+DirectionLine,
+  NextLine is SrcLine+NewIndexLine,
+
+  NewIndexColumn is CurrIndexColumn+DirectionColumn,
+  NextColumn is SrcColumn+NewIndexColumn,
+
+  getMatrixElemAt(NextLine, NextColumn, Board, NextElem),
+  (
+    NextElem == 'emptyCell' -> ( (NextLine == DestLine, NextColumn == DestColumn) ->
+                                  (AfterLine is NextLine+DirectionLine,
+                                   AfterColumn is NextColumn+DirectionColumn,
+                                    getMatrixElemAt(AfterLine, AfterColumn, Board, NextElem) ->
+                                      (NextElem == 'emptyCell' -> false ; true) ; true
+                                  )
+                                 ; validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, NewIndexLine, NewIndexColumn)
+                               ) ; false
+  ).
+
 
 move(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame):-
   get_game_board(Game, Board),
