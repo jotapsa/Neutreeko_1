@@ -69,51 +69,42 @@ evaluate_line_state(Board, 0, _, ColIterator):-
 
 evaluate_line_state(Board, LineValue, RowIterator, ColIterator):-
   !,
-  RowAbove is RowIterator+1, RowBelow is RowIterator-1,
-  ColAhead is ColIterator+1, ColBehind is ColIterator-1,
-  %It's gonna find the two in a row two times, so we give it 500 value every time.
+  RowAbove is RowIterator+1, RowBelow is RowIterator-1, RowAboveAbove is RowIterator+2, RowBelowBelow is RowIterator-2,
+  ColAhead is ColIterator+1, ColBehind is ColIterator-1, ColAheadAhead is ColIterator+2, ColBehindBehind is ColIterator-2,
   %Check above
-  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece1), getMatrixElemAt(RowAbove, ColIterator, Board, Piece2), Piece1 \= emptyCell, Piece1==Piece2)->
+  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece1),
+  getMatrixElemAt(RowAbove, ColIterator, Board, Piece2),
+  Piece1 \= emptyCell,
+  Piece1 = =Piece2)->
     piece_value(Piece1, PieceValue1), TempValue1 is PieceValue1 * 500;
     TempValue1 is 0
   ),
   %Check above right
-  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece3), getMatrixElemAt(RowAbove, ColAhead, Board, Piece4), Piece3 \= emptyCell, Piece4==Piece3)->
+  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece3),
+  getMatrixElemAt(RowAbove, ColAhead, Board, Piece4),
+  Piece3 \= emptyCell,
+  Piece4==Piece3)->
     piece_value(Piece3, PieceValue2), TempValue2 is PieceValue2 * 500;
     TempValue2 is 0
   ),
   %Check right
-  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece5), getMatrixElemAt(RowIterator, ColAhead, Board, Piece6), Piece5 \= emptyCell, Piece5==Piece6)->
+  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece5),
+  getMatrixElemAt(RowIterator, ColAhead, Board, Piece6),
+  Piece5 \= emptyCell,
+  Piece5==Piece6)->
     piece_value(Piece5, PieceValue3), TempValue3 is PieceValue3 * 500;
     TempValue3 is 0
   ),
   %Check below right
-  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece7), getMatrixElemAt(RowBelow, ColAhead, Board, Piece8), Piece7 \= emptyCell, Piece7==Piece8)->
+  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece7),
+  getMatrixElemAt(RowBelow, ColAhead, Board, Piece8),
+  Piece7 \= emptyCell,
+  Piece7==Piece8)->
     piece_value(Piece7, PieceValue4), TempValue4 is PieceValue4 * 500;
     TempValue4 is 0
   ),
-  %Check below
-  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece9), getMatrixElemAt(RowBelow, ColIterator, Board, Piece10), Piece9 \= emptyCell, Piece9==Piece10)->
-    piece_value(Piece9, PieceValue5), TempValue5 is PieceValue5 * 500;
-    TempValue5 is 0
-  ),
-  %Check below left
-  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece11), getMatrixElemAt(RowBelow, ColBehind, Board, Piece12), Piece11 \= emptyCell, Piece11==Piece12)->
-    piece_value(Piece11, PieceValue6), TempValue6 is PieceValue6 * 500;
-    TempValue6 is 0
-  ),
-  %Check left
-  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece13), getMatrixElemAt(RowIterator, ColBehind, Board, Piece14), Piece13 \= emptyCell, Piece13==Piece14)->
-    piece_value(Piece13, PieceValue7), TempValue7 is PieceValue7 * 500;
-    TempValue7 is 0
-  ),
-  %Check above left
-  ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece15), getMatrixElemAt(RowAbove, ColBehind, Board, Piece16), Piece15 \= emptyCell, Piece15==Piece16)->
-    piece_value(Piece15, PieceValue8), TempValue8 is PieceValue8 * 500;
-    TempValue8 is 0
-  ),
-  evaluate_line_state(Line, RemainingValue, RowIterator, ColAhead),
-  LineValue is TempValue1 + TempValue2 + TempValue3 + TempValue4 + TempValue5 + TempValue6 + TempValue7 + TempValue8 + RemainingValue.
+  evaluate_line_state(Board, RemainingValue, RowIterator, ColAhead),
+  LineValue is TempValue1 + TempValue2 + TempValue3 + TempValue4 + RemainingValue.
 
 generate_random_component(RandomValue):-
   random(-10, 11, RandomValue).
