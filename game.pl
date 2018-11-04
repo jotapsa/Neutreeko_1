@@ -48,7 +48,7 @@ initial_board([
   [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
   ]).
 
-%test_board_1 state expected value - 1000
+%test_board_1 state expected value - 500
 test_board_1([
   [whitePiece,whitePiece,emptyCell,emptyCell,blackPiece],
   [blackPiece,emptyCell,emptyCell,emptyCell,emptyCell],
@@ -58,7 +58,7 @@ test_board_1([
   ]).
 
 
-%test_board_2 state expected value - 2000
+%test_board_2 state expected value - 0
 test_board_2([
   [whitePiece,whitePiece,blackPiece,emptyCell,blackPiece],
   [whitePiece,emptyCell,emptyCell,emptyCell,blackPiece],
@@ -67,11 +67,12 @@ test_board_2([
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell]
   ]).
 
+%test_board_3 state expected value - 500
 test_board_3([
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
   [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
-  [emptyCell,emptyCell,emptyCell,emptyCell,blackPiece],
+  [whitePiece,emptyCell,emptyCell,emptyCell,blackPiece],
   [whitePiece,whitePiece,emptyCell,emptyCell,blackPiece]
   ]).
 
