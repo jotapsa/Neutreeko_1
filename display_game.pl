@@ -2,9 +2,9 @@
 %= @@ board printing functions =%
 %===============================%
 
-write_letters:-write('     A     B     C     D     E').
-write_spaces:-write('   |    |     |     |     |     |').
-write_line:-write('   ------------------------------').
+write_letters:-write('       A       B       C       D       E').
+write_spaces:-write('   |       |       |       |       |       |').
+write_line:-write('   -----------------------------------------').
 
 get_cell_symbol(emptyCell, ' ').
 get_cell_symbol(whitePiece, 'O').
@@ -40,5 +40,5 @@ display_line(Line, Y):-
 display_line_aux([]).
 display_line_aux([Cell|Tail]):-
   get_cell_symbol(Cell,Symbol),
-  write(' '), write(Symbol), write('  | '),
+  write('   '), write(Symbol), write('   |'),
   display_line_aux(Tail).
