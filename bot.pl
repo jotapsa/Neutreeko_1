@@ -5,19 +5,25 @@
 maximizing(whitePlayer).
 minimizing(blackPlayer).
 
-alphabeta(Board, Depth, Move, Player):-
-  alphabeta(Board, Depth, Player, -1000, 1000, _, Move).
+next_player(whitePlayer, blackPlayer).
+next_player(blackPlayer, whitePlayer).
 
-alphabeta(Board, 0, Player, _, _, Value, _):-
-  value(Board, Value).
-
-alphabeta(Board, Depth, Player, Alpha, Beta, Value, Move):-
-  Depth>0,
-  Depth1 is Depth-1,
-  findall(M, move(Board, M), Moves),
-
-alphabeta([Move|Moves], Board, Depth, Player,)
-
+% alphabeta(Board, Depth, Move, Player):-
+%   alphabeta(Board, Depth, Player, -1000, 1000, _, Move).
+%
+% alphabeta(Board, 0, Player, _, _, Value, _):-
+%   value(Board, Value).
+%
+% alphabeta(Board, Depth, Player, Alpha, Beta, Value, Move):-
+%   Depth>0,
+%   Depth1 is Depth-1,
+%   findall(M, move(Board, M), Moves),
+%   alphabeta(Moves, Board, Depth1, Player, Alpha, Beta, BestMove, BestEval).
+%
+% alphabeta([Move|Moves], Board, Depth, Player, Alpha, Beta, BestMove, BestEval):-
+%   move(Move, Board, ResultantBoard),
+%   next_player(Player, NextPlayer),
+%   alphabeta(ResultantBoard, Depth, _, Alpha, Beta, Value, NextPlayer),
 
 %==================%
 %= @@ value stuff =%
