@@ -2,47 +2,22 @@
 %= @@ alpha beta =%
 %=================%
 
-alph_bet(Pos, Move, Depth) :- alph_bet(Depth, Pos, -1000, 1000, _, Move).
+maximizing(whitePlayer).
+minimizing(blackPlayer).
 
-/* alph_bet(+Depth, +Position, +Player, +Alpha, +Beta, -BestValue, -BestMove) :-
-        Chooses the BestMove from the from the current Position
-        using the alpha beta algorithm searching Depth ply ahead.
-        Player indicates if the next move is by player (1) or opponent (-1).
-*/
-alph_bet(0, Position, _, _, Value, _) :-
-  value(Position, V),
-  Value is V.
+alphabeta(Board, Depth, Move, Player):-
+  alphabeta(Board, Depth, Player, -1000, 1000, _, Move).
 
-alph_bet(D, Position, Alpha, Beta, Value, Move) :-
-    D > 0,
-    D1 is D - 1,
-    % findall(M, move(Position, M), Moves),
-    alph_bet(Moves, Position, D1, Player, Alpha, Beta, nil, Value, Move).
+alphabeta(Board, 0, Player, _, _, Value, _):-
+  value(Board, Value).
 
-/* alph_bet(+Moves,+Position,+Depth,+Player,+Alpha,+Beta,+Move0,
-            -BestValue,-BestMove)
-      Chooses the Best move from the list of Moves from the current Position
-      using the alpha beta algorithm searching Depth ply ahead.
-      Player indicates if the next move is by player (1) or opponent (-1).
-      Move0 records the best move found so far and Alpha its value.
-      If a value >= Beta is found, then this position is too good to be true:
-      the opponent will not move us into this position.
-*/
-% alph_bet([], _, _, _, Value, _, Best, Value, Best).
-% alph_bet([Move|Moves], Position, D, Player, Alpha, Beta, Move0,
-% 	 BestValue, BestMove):-
-%     move(Move, Position, Position1),
-%     Opponent is -Player,
-%     OppAlpha is -Beta,
-%     OppBeta is -Alpha,
-%     alph_bet(D, Position1, Opponent, OppAlpha, OppBeta, OppValue, _OppMove),
-%     Value is -OppValue,
-%     ( Value >= Beta ->
-%       BestValue = Value, BestMove = Move % abort: too good to be true
-%     ; Value > Alpha ->
-%       alph_bet(Moves,Position,D,Player,Value,Beta,Move ,BestValue,BestMove)
-%     ; alph_bet(Moves,Position,D,Player,Alpha,Beta,Move0,BestValue,BestMove)
-%     ).
+alphabeta(Board, Depth, Player, Alpha, Beta, Value, Move):-
+  Depth>0,
+  Depth1 is Depth-1,
+  findall(M, move(Board, M), Moves),
+
+alphabeta([Move|Moves], Board, Depth, Player,)
+
 
 %==================%
 %= @@ value stuff =%
