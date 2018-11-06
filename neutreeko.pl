@@ -36,20 +36,20 @@ play_game(Game):-
   play_game(TempGame).
 
 human_play(Game, ResultantGame):-
-  get_game_board(Game, Board), get_game_player_turn(Game,Player),
+  get_game_board(Game, Board), get_game_player_turn(Game, Player),
 
   clear_console,
   display_game(Board, Player),
-  get_piece_source_coords(SrcLine, SrcColumn),
+  get_piece_source_coords(m(Xi, Yi, _, _)),
   validate_chosen_piece_ownership(SrcLine, SrcColumn, Board, Player),
 
   clear_console,
   display_game(Board, Player),
-  get_piece_destiny_coords(DestLine, DestColumn),
-  validate_coordinates_different(SrcLine, SrcColumn, DestLine, DestColumn),
+  get_piece_destiny_coords(m(_, _, Xf, Yf)),
+  validate_coordinates_different(Xi, Yi, Xf, Yf),
 
-  validate_move(SrcLine, SrcColumn, DestLine, DestColumn, Board),
-  move(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame), !.
+  validate_move(Xi, Yi, Xf, Yf, Board),
+  move(Xi, Yi, Xf, Yf, Game, ResultantGame), !.
 
 
 %==============================================%
@@ -173,23 +173,23 @@ change_turn(Game, ResultantGame):-
 %= @@ game input functions =%
 %===========================%
 
-get_piece_source_coords(SrcLine, SrcColumn):-
+get_piece_source_coords(m(Xi, Yi, _, _)):-
 	write('Please insert the coordinates of the piece you wish to move and press <Enter> - example: 3f.'), nl,
-	input_coords(SrcLine, SrcColumn), nl.
+	input_coords(Xi, Yi), nl.
 
-get_piece_destiny_coords(SrcLine, SrcColumn):-
+get_piece_destiny_coords(m( _, _, Xf, Yf)):-
   write('Please insert the destiny coordinates that piece and press <Enter>'), nl,
-  input_coords(SrcLine, SrcColumn), nl.
+  input_coords(Xf, Yf), nl.
 
-input_coords(SrcLine, SrcColumn):-
+input_coords(X, Y):-
 	get_int(RawSrcLine),
 	get_code(RawSrcColumn),
 
 	discard_input_char,
 
 	% process row and column
-	SrcLine is RawSrcLine-1,
-	SrcColumn is RawSrcColumn-48-48-1.
+	X is RawSrcLine-1,
+	Y is RawSrcColumn-48-48-1.
 
 checkVertical(Board, Piece) :-
   getMatrixElemAt(X, Y, Board, Piece),
