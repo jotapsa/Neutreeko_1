@@ -40,38 +40,39 @@ human_play(Game, ResultantGame):-
 
   clear_console,
   display_game(Board, Player),
-  get_piece_source_coords(m(Xi, Yi, _, _)),
-  validate_chosen_piece_ownership(SrcLine, SrcColumn, Board, Player),
+  get_piece_source_coords(m(Yi, Xi, _, _)),
+  validate_chosen_piece_ownership(m(Yi, Xi, _, _), Board, Player),
 
   clear_console,
   display_game(Board, Player),
-  get_piece_destiny_coords(m(_, _, Xf, Yf)),
-  validate_coordinates_different(Xi, Yi, Xf, Yf),
+  get_piece_destiny_coords(m(_, _, Yf, Xf)),
+  validate_coordinates_different(m(Yi, Xi, Yf, Xf)),
 
-  validate_move(Xi, Yi, Xf, Yf, Board),
-  move(Xi, Yi, Xf, Yf, Game, ResultantGame), !.
+  validate_move(Yi, Xi, Yf, Xf, Board),
+  move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard),
+  set_game_board(Game, ResultantBoard, ResultantGame), !.
 
 
 %==============================================%
 %= @@ board validation/manipulation functions =%
 %==============================================%
 
-validate_chosen_piece_ownership(SrcLine, SrcColumn, Board, Player):-
-	getMatrixElemAt(SrcLine, SrcColumn, Board, Piece),
+validate_chosen_piece_ownership(m(Yi, Xi, _, _), Board, Player):-
+	getMatrixElemAt(Yi, Xi, Board, Piece),
 	piece_owner(Piece, Player), !.
 
-validate_chosen_piece_ownership(_, _, _, _):-
+validate_chosen_piece_ownership(m(_, _, _, _), _, _):-
 	write('# INVALID PIECE!'), nl,
 	write('# A player can only move his/her own pieces.'), nl,
 	print_enter_to_continue, nl,
 	fail.
 
-validate_coordinates_different(SrcLine, SrcColumn, DestLine, DestColumn):-
-	(SrcLine \= DestLine ; SrcColumn \= DestColumn), !.
+validate_coordinates_different(m(Yi, Xi, Yf, Xf)):-
+	(Yi \= Yf ; Xi \= Xf), !.
 
-validate_coordinates_different(_, _, _, _):-
+validate_coordinates_different(m(_, _, _, _)):-
 	write('# INVALID INPUT!'), nl,
-	write('T# he source and destiny coordinates must be different.'), nl,
+	write('# The source and destiny coordinates must be different.'), nl,
 	print_enter_to_continue, nl,
 	fail.
 
@@ -154,12 +155,10 @@ validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionL
   ).
 
 
-move(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame):-
-  get_game_board(Game, Board),
-  getMatrixElemAt(SrcLine, SrcColumn, Board, SrcElem),
-  setMatrixElemAtWith(SrcLine, SrcColumn, emptyCell, Board, TempBoard),
-  setMatrixElemAtWith(DestLine, DestColumn, SrcElem, TempBoard, ResultantBoard),
-  set_game_board(ResultantBoard, Game, ResultantGame).
+move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
+  getMatrixElemAt(Yi, Xi, Board, SrcElem),
+  setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
+  setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
 change_turn(Game, ResultantGame):-
   get_game_player_turn(Game, Player),
@@ -173,23 +172,23 @@ change_turn(Game, ResultantGame):-
 %= @@ game input functions =%
 %===========================%
 
-get_piece_source_coords(m(Xi, Yi, _, _)):-
+get_piece_source_coords(m(Yi, Xi, _, _)):-
 	write('Please insert the coordinates of the piece you wish to move and press <Enter> - example: 3f.'), nl,
-	input_coords(Xi, Yi), nl.
+	input_coords(Yi, Xi), nl.
 
-get_piece_destiny_coords(m( _, _, Xf, Yf)):-
+get_piece_destiny_coords(m( _, _, Yf, Xf)):-
   write('Please insert the destiny coordinates that piece and press <Enter>'), nl,
-  input_coords(Xf, Yf), nl.
+  input_coords(Yf, Xf), nl.
 
-input_coords(X, Y):-
+input_coords(Y, X):-
 	get_int(RawSrcLine),
 	get_code(RawSrcColumn),
 
 	discard_input_char,
 
 	% process row and column
-	X is RawSrcLine-1,
-	Y is RawSrcColumn-48-48-1.
+	Y is RawSrcLine-1,
+	X is RawSrcColumn-48-48-1.
 
 checkVertical(Board, Piece) :-
   getMatrixElemAt(X, Y, Board, Piece),
