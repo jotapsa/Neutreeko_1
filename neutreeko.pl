@@ -33,7 +33,8 @@ play_game(Game):-
 
 play_game(Game):-
   human_play(Game, TempGame),
-  play_game(TempGame).
+  next_turn(TempGame, ResultantGame),
+  play_game(ResultantGame).
 
 human_play(Game, ResultantGame):-
   get_game_board(Game, Board), get_game_player_turn(Game, Player),
@@ -50,7 +51,7 @@ human_play(Game, ResultantGame):-
 
   validate_move(m(Yi, Xi, Yf, Xf), Board),
   move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard),
-  set_game_board(Game, ResultantBoard, ResultantGame), !.
+  set_game_board(ResultantBoard, Game, ResultantGame), !.
 
 
 %==============================================%
@@ -160,7 +161,7 @@ move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
   setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
   setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
-change_turn(Game, ResultantGame):-
+next_turn(Game, ResultantGame):-
   get_game_player_turn(Game, Player),
   (
     Player == whitePlayer -> NextPlayer = blackPlayer;
@@ -176,7 +177,7 @@ get_piece_source_coords(m(Yi, Xi, _, _)):-
 	write('Please insert the coordinates of the piece you wish to move and press <Enter> - example: 3f.'), nl,
 	input_coords(Yi, Xi), nl.
 
-get_piece_destiny_coords(m( _, _, Yf, Xf)):-
+get_piece_destiny_coords(m(_, _, Yf, Xf)):-
   write('Please insert the destiny coordinates that piece and press <Enter>'), nl,
   input_coords(Yf, Xf), nl.
 
