@@ -1,5 +1,6 @@
 :-use_module(library(lists)).
 :-use_module(library(random)).
+:- use_module(library(aggregate)).
 :-include('utilities.pl').
 :-include('containers.pl').
 :-include('menus.pl').
@@ -33,135 +34,141 @@ play_game(Game):-
 
 play_game(Game):-
   human_play(Game, TempGame),
-  play_game(TempGame).
+  next_turn(TempGame, ResultantGame),
+  play_game(ResultantGame).
 
 human_play(Game, ResultantGame):-
-  get_game_board(Game, Board), get_game_player_turn(Game,Player),
+  get_game_board(Game, Board), get_game_player_turn(Game, Player),
 
   clear_console,
   display_game(Board, Player),
-  get_piece_source_coords(SrcLine, SrcColumn),
-  validate_chosen_piece_ownership(SrcLine, SrcColumn, Board, Player),
+  get_piece_source_coords(m(Yi, Xi, _, _)),
+  validate_chosen_piece_ownership(m(Yi, Xi, _, _), Board, Player),
 
   clear_console,
   display_game(Board, Player),
-  get_piece_destiny_coords(DestLine, DestColumn),
-  validate_coordinates_different(SrcLine, SrcColumn, DestLine, DestColumn),
+  get_piece_destiny_coords(m(_, _, Yf, Xf)),
+  validate_coordinates_different(m(Yi, Xi, Yf, Xf)),
 
-  validate_move(SrcLine, SrcColumn, DestLine, DestColumn, Board),
-  move(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame), !.
+  validate_move(m(Yi, Xi, Yf, Xf), Board),
+  move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard),
+  set_game_board(ResultantBoard, Game, ResultantGame), !.
 
+  valid_moves(Board, Player, ListOfMoves):-
+    get_player_piece(Player, Piece),
+    % findall(m(Yi, Xi, _, _), getMatrixElemAt(Yi, Xi, Board, Piece), PlayerPieces),
+    getMatrixElemAt(Yi, Xi, Board, Piece),
+    getMatrixElemAt(Yf, Xf, Board, emptyCell),
+    findall(m(Yi, Xi, Yf, Xf), validate_move(m(Yi, Xi, Yf, Xf), Board), ListOfMoves).
 
 %==============================================%
 %= @@ board validation/manipulation functions =%
 %==============================================%
 
-validate_chosen_piece_ownership(SrcLine, SrcColumn, Board, Player):-
-	getMatrixElemAt(SrcLine, SrcColumn, Board, Piece),
+validate_chosen_piece_ownership(m(Yi, Xi, _, _), Board, Player):-
+	getMatrixElemAt(Yi, Xi, Board, Piece),
 	piece_owner(Piece, Player), !.
 
-validate_chosen_piece_ownership(_, _, _, _):-
+validate_chosen_piece_ownership(m(_, _, _, _), _, _):-
 	write('# INVALID PIECE!'), nl,
 	write('# A player can only move his/her own pieces.'), nl,
 	print_enter_to_continue, nl,
 	fail.
 
-validate_coordinates_different(SrcLine, SrcColumn, DestLine, DestColumn):-
-	(SrcLine \= DestLine ; SrcColumn \= DestColumn), !.
+validate_coordinates_different(m(Yi, Xi, Yf, Xf)):-
+	(Yi \= Yf ; Xi \= Xf), !.
 
-validate_coordinates_different(_, _, _, _):-
+validate_coordinates_different(m(_, _, _, _)):-
 	write('# INVALID INPUT!'), nl,
-	write('T# he source and destiny coordinates must be different.'), nl,
+	write('# The source and destiny coordinates must be different.'), nl,
 	print_enter_to_continue, nl,
 	fail.
 
-validate_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
-  validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Board);
-  validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Board);
-  validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Board).
+validate_move(m(Yi, Xi, Yf, Xf), Board):-
+  validate_X_move(m(Yi, Xi, Yf, Xf), Board);
+  validate_Y_move(m(Yi, Xi, Yf, Xf), Board);
+  validate_XY_move(m(Yi, Xi, Yf, Xf), Board).
 
-validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
-  DiffLine is DestLine - SrcLine,
-  DiffColumn is DestColumn - SrcColumn,
-  DiffLine == 0, DiffColumn \= 0,
-  (DiffColumn > 0 -> Direction is 1 ; Direction is -1),
-  validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, 0).
+validate_X_move(m(Yi, Xi, Yf, Xf), Board):-
+  DiffX is Xf - Xi,
+  DiffY is Yf - Yi,
+  DiffY == 0, DiffX \= 0,
+  (DiffX > 0 -> Direction is 1 ; Direction is -1),
+  validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, 0).
 
-validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, CurrIndex):-
+validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   NewIndex is CurrIndex+Direction,
-  NextColumn is SrcColumn+NewIndex,
+  NextX is Xi+NewIndex,
 
-  getMatrixElemAt(SrcLine, NextColumn, Board, NextElem),
+  getMatrixElemAt(Yi, NextX, Board, NextElem),
   (
-    NextElem == 'emptyCell' -> (NextColumn == DestColumn ->
-                                  (AfterColumn is NextColumn+Direction,
-                                    getMatrixElemAt(SrcLine, AfterColumn , Board, NextElem) ->
+    NextElem == 'emptyCell' -> (NextX == Xf ->
+                                  (AfterX is NextX+Direction,
+                                    getMatrixElemAt(Yi, AfterX , Board, NextElem) ->
                                       (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
-                                 ; validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, NewIndex)
+                                 ; validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, NewIndex)
                                ) ; false
   ).
 
-validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
-  DiffLine is DestLine - SrcLine,
-  DiffColumn is DestColumn - SrcColumn,
-  DiffLine \= 0, DiffColumn == 0,
-  (DiffLine > 0 -> Direction is 1 ; Direction is -1),
-  validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, 0).
+validate_Y_move(m(Yi, Xi, Yf, Xf), Board):-
+  DiffX is Xf - Xi,
+  DiffY is Yf - Yi,
+  DiffY \= 0, DiffX == 0,
+  (DiffY > 0 -> Direction is 1 ; Direction is -1),
+  validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, 0).
 
-validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, CurrIndex):-
+validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   NewIndex is CurrIndex+Direction,
-  NextLine is SrcLine+NewIndex,
+  NextY is Yi+NewIndex,
 
-  getMatrixElemAt(NextLine, SrcColumn, Board, NextElem),
+  getMatrixElemAt(NextY, Xi, Board, NextElem),
   (
-    NextElem == 'emptyCell' -> (NextLine == DestLine ->
-                                  (AfterLine is NextLine+Direction,
-                                    getMatrixElemAt(AfterLine, DestColumn , Board, NextElem) ->
+    NextElem == 'emptyCell' -> (NextY == Yf ->
+                                  (AfterY is NextY+Direction,
+                                    getMatrixElemAt(AfterY, Xf , Board, NextElem) ->
                                       (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
-                                 ; validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, NewIndex)
+                                 ; validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, NewIndex)
                                ) ; false
   ).
 
-validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
-  DiffLine is DestLine - SrcLine,
-  DiffColumn is DestColumn - SrcColumn,
-  DiffLine \= 0, DiffColumn \= 0,
-  DiffLineAbs is abs(DiffLine), DiffColumnAbs is abs(DiffColumn),
-  DiffLineAbs == DiffColumnAbs,
-  (DiffLine > 0 -> DirectionLine is 1 ; DirectionLine is -1),
-  (DiffColumn > 0 -> DirectionColumn is 1 ; DirectionColumn is -1),
-  validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, 0,0).
+validate_XY_move(m(Yi, Xi, Yf, Xf), Board):-
+  DiffX is Xf - Xi,
+  DiffY is Yf - Yi,
+  DiffY \= 0, DiffX \= 0,
+  DiffYAbs is abs(DiffY), DiffXAbs is abs(DiffX),
+  DiffYAbs == DiffXAbs,
+  (DiffY > 0 -> DirectionY is 1 ; DirectionY is -1),
+  (DiffX > 0 -> DirectionX is 1 ; DirectionX is -1),
+  validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, 0,0).
 
-validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, CurrIndexLine, CurrIndexColumn):-
-  NewIndexLine is CurrIndexLine+DirectionLine,
-  NextLine is SrcLine+NewIndexLine,
+validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, CurrIndexY, CurrIndexX):-
+  NewIndexY is CurrIndexY+DirectionY,
+  NextY is Yi+NewIndexY,
 
-  NewIndexColumn is CurrIndexColumn+DirectionColumn,
-  NextColumn is SrcColumn+NewIndexColumn,
+  NewIndexX is CurrIndexX+DirectionX,
+  NextX is Xi+NewIndexX,
 
-  getMatrixElemAt(NextLine, NextColumn, Board, NextElem),
+  getMatrixElemAt(NextY, NextX, Board, NextElem),
   (
-    NextElem == 'emptyCell' -> ( (NextLine == DestLine, NextColumn == DestColumn) ->
-                                  (AfterLine is NextLine+DirectionLine,
-                                   AfterColumn is NextColumn+DirectionColumn,
-                                    getMatrixElemAt(AfterLine, AfterColumn, Board, NextElem) ->
+    NextElem == 'emptyCell' -> ( (NextY == Yf, NextX == Xf) ->
+                                  (AfterY is NextY+DirectionY,
+                                   AfterX is NextX+DirectionX,
+                                    getMatrixElemAt(AfterY, AfterX, Board, NextElem) ->
                                       (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
-                                 ; validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, NewIndexLine, NewIndexColumn)
+                                 ; validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, NewIndexY, NewIndexX)
                                ) ; false
   ).
 
 
-move(SrcLine, SrcColumn, DestLine, DestColumn, Game, ResultantGame):-
-  get_game_board(Game, Board),
-  getMatrixElemAt(SrcLine, SrcColumn, Board, SrcElem),
-  setMatrixElemAtWith(SrcLine, SrcColumn, emptyCell, Board, TempBoard),
-  setMatrixElemAtWith(DestLine, DestColumn, SrcElem, TempBoard, ResultantBoard),
-  set_game_board(ResultantBoard, Game, ResultantGame).
+move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
+  getMatrixElemAt(Yi, Xi, Board, SrcElem),
+  setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
+  setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
-change_turn(Game, ResultantGame):-
+next_turn(Game, ResultantGame):-
   get_game_player_turn(Game, Player),
   (
     Player == whitePlayer -> NextPlayer = blackPlayer;
@@ -173,23 +180,23 @@ change_turn(Game, ResultantGame):-
 %= @@ game input functions =%
 %===========================%
 
-get_piece_source_coords(SrcLine, SrcColumn):-
+get_piece_source_coords(m(Yi, Xi, _, _)):-
 	write('Please insert the coordinates of the piece you wish to move and press <Enter> - example: 3f.'), nl,
-	input_coords(SrcLine, SrcColumn), nl.
+	input_coords(Yi, Xi), nl.
 
-get_piece_destiny_coords(SrcLine, SrcColumn):-
+get_piece_destiny_coords(m(_, _, Yf, Xf)):-
   write('Please insert the destiny coordinates that piece and press <Enter>'), nl,
-  input_coords(SrcLine, SrcColumn), nl.
+  input_coords(Yf, Xf), nl.
 
-input_coords(SrcLine, SrcColumn):-
+input_coords(Y, X):-
 	get_int(RawSrcLine),
 	get_code(RawSrcColumn),
 
 	discard_input_char,
 
 	% process row and column
-	SrcLine is RawSrcLine-1,
-	SrcColumn is RawSrcColumn-48-48-1.
+	Y is RawSrcLine-1,
+	X is RawSrcColumn-48-48-1.
 
 checkVertical(Board, Piece) :-
   getMatrixElemAt(X, Y, Board, Piece),
