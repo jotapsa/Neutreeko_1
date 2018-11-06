@@ -40,6 +40,8 @@ play_game(Game):-
 human_play(Game, ResultantGame):-
   get_game_board(Game, Board), get_game_player_turn(Game, Player),
 
+  repeat,
+
   clear_console,
   display_game(Board, Player),
   get_piece_source_coords(m(Yi, Xi, _, _)),
@@ -54,12 +56,12 @@ human_play(Game, ResultantGame):-
   move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard),
   set_game_board(ResultantBoard, Game, ResultantGame), !.
 
-  valid_moves(Board, Player, ListOfMoves):-
-    get_player_piece(Player, Piece),
-    % findall(m(Yi, Xi, _, _), getMatrixElemAt(Yi, Xi, Board, Piece), PlayerPieces),
-    getMatrixElemAt(Yi, Xi, Board, Piece),
-    getMatrixElemAt(Yf, Xf, Board, emptyCell),
-    findall(m(Yi, Xi, Yf, Xf), validate_move(m(Yi, Xi, Yf, Xf), Board), ListOfMoves).
+valid_moves(Board, Player, ListOfMoves):-
+  get_player_piece(Player, Piece),
+  % findall(m(Yi, Xi, _, _), getMatrixElemAt(Yi, Xi, Board, Piece), PlayerPieces),
+  getMatrixElemAt(Yi, Xi, Board, Piece),
+  getMatrixElemAt(Yf, Xf, Board, emptyCell),
+  findall(m(Yi, Xi, Yf, Xf), validate_move(m(Yi, Xi, Yf, Xf), Board), ListOfMoves).
 
 %==============================================%
 %= @@ board validation/manipulation functions =%
