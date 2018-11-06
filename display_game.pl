@@ -14,6 +14,9 @@ get_cell_symbol(_, '?').
 get_player_name(whitePlayer, 'White').
 get_player_name(blackPlayer, 'Black').
 
+get_player_piece(blackPlayer, blackPiece).
+get_player_piece(whitePlayer, whitePiece).
+
 print_turn_info(Player):-
   get_player_name(Player, PlayerName),
   write('# It is '), write(PlayerName), write(' player\'s turn to play.'), nl.
