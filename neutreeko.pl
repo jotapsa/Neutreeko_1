@@ -48,7 +48,7 @@ human_play(Game, ResultantGame):-
   get_piece_destiny_coords(m(_, _, Yf, Xf)),
   validate_coordinates_different(m(Yi, Xi, Yf, Xf)),
 
-  validate_move(Yi, Xi, Yf, Xf, Board),
+  validate_move(m(Yi, Xi, Yf, Xf), Board),
   move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard),
   set_game_board(Game, ResultantBoard, ResultantGame), !.
 
@@ -76,81 +76,81 @@ validate_coordinates_different(m(_, _, _, _)):-
 	print_enter_to_continue, nl,
 	fail.
 
-validate_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
-  validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Board);
-  validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Board);
-  validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Board).
+validate_move(m(Yi, Xi, Yf, Xf), Board):-
+  validate_X_move(m(Yi, Xi, Yf, Xf), Board);
+  validate_Y_move(m(Yi, Xi, Yf, Xf), Board);
+  validate_XY_move(m(Yi, Xi, Yf, Xf), Board).
 
-validate_X_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
-  DiffLine is DestLine - SrcLine,
-  DiffColumn is DestColumn - SrcColumn,
-  DiffLine == 0, DiffColumn \= 0,
-  (DiffColumn > 0 -> Direction is 1 ; Direction is -1),
-  validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, 0).
+validate_X_move(m(Yi, Xi, Yf, Xf), Board):-
+  DiffX is Xf - Xi,
+  DiffY is Yf - Yi,
+  DiffY == 0, DiffX \= 0,
+  (DiffX > 0 -> Direction is 1 ; Direction is -1),
+  validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, 0).
 
-validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, CurrIndex):-
+validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   NewIndex is CurrIndex+Direction,
-  NextColumn is SrcColumn+NewIndex,
+  NextX is Xi+NewIndex,
 
-  getMatrixElemAt(SrcLine, NextColumn, Board, NextElem),
+  getMatrixElemAt(Yi, NextX, Board, NextElem),
   (
-    NextElem == 'emptyCell' -> (NextColumn == DestColumn ->
-                                  (AfterColumn is NextColumn+Direction,
-                                    getMatrixElemAt(SrcLine, AfterColumn , Board, NextElem) ->
+    NextElem == 'emptyCell' -> (NextX == Xf ->
+                                  (AfterX is NextX+Direction,
+                                    getMatrixElemAt(Yi, AfterX , Board, NextElem) ->
                                       (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
-                                 ; validate_X_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, NewIndex)
+                                 ; validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, NewIndex)
                                ) ; false
   ).
 
-validate_Y_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
-  DiffLine is DestLine - SrcLine,
-  DiffColumn is DestColumn - SrcColumn,
-  DiffLine \= 0, DiffColumn == 0,
-  (DiffLine > 0 -> Direction is 1 ; Direction is -1),
-  validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, 0).
+validate_Y_move(m(Yi, Xi, Yf, Xf), Board):-
+  DiffX is Xf - Xi,
+  DiffY is Yf - Yi,
+  DiffY \= 0, DiffX == 0,
+  (DiffY > 0 -> Direction is 1 ; Direction is -1),
+  validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, 0).
 
-validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, CurrIndex):-
+validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   NewIndex is CurrIndex+Direction,
-  NextLine is SrcLine+NewIndex,
+  NextY is Yi+NewIndex,
 
-  getMatrixElemAt(NextLine, SrcColumn, Board, NextElem),
+  getMatrixElemAt(NextY, Xi, Board, NextElem),
   (
-    NextElem == 'emptyCell' -> (NextLine == DestLine ->
-                                  (AfterLine is NextLine+Direction,
-                                    getMatrixElemAt(AfterLine, DestColumn , Board, NextElem) ->
+    NextElem == 'emptyCell' -> (NextY == Yf ->
+                                  (AfterY is NextY+Direction,
+                                    getMatrixElemAt(AfterY, Xf , Board, NextElem) ->
                                       (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
-                                 ; validate_Y_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, Direction, NewIndex)
+                                 ; validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, NewIndex)
                                ) ; false
   ).
 
-validate_XY_move(SrcLine, SrcColumn, DestLine, DestColumn, Board):-
-  DiffLine is DestLine - SrcLine,
-  DiffColumn is DestColumn - SrcColumn,
-  DiffLine \= 0, DiffColumn \= 0,
-  DiffLineAbs is abs(DiffLine), DiffColumnAbs is abs(DiffColumn),
-  DiffLineAbs == DiffColumnAbs,
-  (DiffLine > 0 -> DirectionLine is 1 ; DirectionLine is -1),
-  (DiffColumn > 0 -> DirectionColumn is 1 ; DirectionColumn is -1),
-  validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, 0,0).
+validate_XY_move(m(Yi, Xi, Yf, Xf), Board):-
+  DiffX is Xf - Xi,
+  DiffY is Yf - Yi,
+  DiffY \= 0, DiffX \= 0,
+  DiffYAbs is abs(DiffY), DiffXAbs is abs(DiffX),
+  DiffYAbs == DiffXAbs,
+  (DiffY > 0 -> DirectionY is 1 ; DirectionY is -1),
+  (DiffX > 0 -> DirectionX is 1 ; DirectionX is -1),
+  validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, 0,0).
 
-validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, CurrIndexLine, CurrIndexColumn):-
-  NewIndexLine is CurrIndexLine+DirectionLine,
-  NextLine is SrcLine+NewIndexLine,
+validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, CurrIndexY, CurrIndexX):-
+  NewIndexY is CurrIndexY+DirectionY,
+  NextY is Yi+NewIndexY,
 
-  NewIndexColumn is CurrIndexColumn+DirectionColumn,
-  NextColumn is SrcColumn+NewIndexColumn,
+  NewIndexX is CurrIndexX+DirectionX,
+  NextX is Xi+NewIndexX,
 
-  getMatrixElemAt(NextLine, NextColumn, Board, NextElem),
+  getMatrixElemAt(NextY, NextX, Board, NextElem),
   (
-    NextElem == 'emptyCell' -> ( (NextLine == DestLine, NextColumn == DestColumn) ->
-                                  (AfterLine is NextLine+DirectionLine,
-                                   AfterColumn is NextColumn+DirectionColumn,
-                                    getMatrixElemAt(AfterLine, AfterColumn, Board, NextElem) ->
+    NextElem == 'emptyCell' -> ( (NextY == Yf, NextX == Xf) ->
+                                  (AfterY is NextY+DirectionY,
+                                   AfterX is NextX+DirectionX,
+                                    getMatrixElemAt(AfterY, AfterX, Board, NextElem) ->
                                       (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
-                                 ; validate_XY_move_aux(SrcLine, SrcColumn, DestLine, DestColumn, Board, DirectionLine, DirectionColumn, NewIndexLine, NewIndexColumn)
+                                 ; validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, NewIndexY, NewIndexX)
                                ) ; false
   ).
 
