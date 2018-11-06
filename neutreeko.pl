@@ -1,6 +1,6 @@
 :-use_module(library(lists)).
 :-use_module(library(random)).
-:- use_module(library(aggregate)).
+:-use_module(library(clpfd)).
 :-include('utilities.pl').
 :-include('containers.pl').
 :-include('menus.pl').
@@ -56,10 +56,14 @@ human_play(Game, ResultantGame):-
 
   valid_moves(Board, Player, ListOfMoves):-
     get_player_piece(Player, Piece),
-    % findall(m(Yi, Xi, _, _), getMatrixElemAt(Yi, Xi, Board, Piece), PlayerPieces),
-    getMatrixElemAt(Yi, Xi, Board, Piece),
-    getMatrixElemAt(Yf, Xf, Board, emptyCell),
-    findall(m(Yi, Xi, Yf, Xf), validate_move(m(Yi, Xi, Yf, Xf), Board), ListOfMoves).
+    findall(m(Yi, Xi, _, _), getMatrixElemAt(Yi, Xi, Board, Piece), PlayerPieces),
+    % Xi in 0..4, Yi in 0..4,
+    X in 0..4, Y in 0..4,
+    findall(m(Yi, Xi, Y, X) , (member(m(Yi, Xi, _, _), PlayerPieces), validate_move(m(Yi, Xi, Y, X), Board)), ListOfMoves).
+    % valid_moves_aux(Board, PlayerPieces, ListOfMoves, 2).
+    % getMatrixElemAt(Yi, Xi, Board, Piece),
+    % getMatrixElemAt(Yf, Xf, Board, emptyCell),
+    % findall(m(Yi, Xi, Yf, Xf), validate_move(m(Yi, Xi, Yf, Xf), Board), ListOfMoves).
 
 %==============================================%
 %= @@ board validation/manipulation functions =%
@@ -90,20 +94,20 @@ validate_move(m(Yi, Xi, Yf, Xf), Board):-
   validate_XY_move(m(Yi, Xi, Yf, Xf), Board).
 
 validate_X_move(m(Yi, Xi, Yf, Xf), Board):-
-  DiffX is Xf - Xi,
-  DiffY is Yf - Yi,
-  DiffY == 0, DiffX \= 0,
-  (DiffX > 0 -> Direction is 1 ; Direction is -1),
+  DiffX #= Xf - Xi,
+  DiffY #= Yf - Yi,
+  DiffY #= 0, DiffX #\= 0,
+  (DiffX #> 0 -> Direction #= 1 ; Direction #= -1),
   validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, 0).
 
 validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
-  NewIndex is CurrIndex+Direction,
-  NextX is Xi+NewIndex,
+  NewIndex #= CurrIndex+Direction,
+  NextX #= Xi+NewIndex,
 
   getMatrixElemAt(Yi, NextX, Board, NextElem),
   (
-    NextElem == 'emptyCell' -> (NextX == Xf ->
-                                  (AfterX is NextX+Direction,
+    NextElem == 'emptyCell' -> (NextX #= Xf ->
+                                  (AfterX #= NextX+Direction,
                                     getMatrixElemAt(Yi, AfterX , Board, NextElem) ->
                                       (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
@@ -112,20 +116,20 @@ validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   ).
 
 validate_Y_move(m(Yi, Xi, Yf, Xf), Board):-
-  DiffX is Xf - Xi,
-  DiffY is Yf - Yi,
-  DiffY \= 0, DiffX == 0,
-  (DiffY > 0 -> Direction is 1 ; Direction is -1),
+  DiffX #= Xf - Xi,
+  DiffY #= Yf - Yi,
+  DiffY #\= 0, DiffX #= 0,
+  (DiffY #> 0 -> Direction #= 1 ; Direction #= -1),
   validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, 0).
 
 validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
-  NewIndex is CurrIndex+Direction,
-  NextY is Yi+NewIndex,
+  NewIndex #= CurrIndex+Direction,
+  NextY #= Yi+NewIndex,
 
   getMatrixElemAt(NextY, Xi, Board, NextElem),
   (
-    NextElem == 'emptyCell' -> (NextY == Yf ->
-                                  (AfterY is NextY+Direction,
+    NextElem == 'emptyCell' -> (NextY #= Yf ->
+                                  (AfterY #= NextY+Direction,
                                     getMatrixElemAt(AfterY, Xf , Board, NextElem) ->
                                       (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
@@ -134,27 +138,27 @@ validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   ).
 
 validate_XY_move(m(Yi, Xi, Yf, Xf), Board):-
-  DiffX is Xf - Xi,
-  DiffY is Yf - Yi,
-  DiffY \= 0, DiffX \= 0,
-  DiffYAbs is abs(DiffY), DiffXAbs is abs(DiffX),
-  DiffYAbs == DiffXAbs,
-  (DiffY > 0 -> DirectionY is 1 ; DirectionY is -1),
-  (DiffX > 0 -> DirectionX is 1 ; DirectionX is -1),
+  DiffX #= Xf - Xi,
+  DiffY #= Yf - Yi,
+  DiffY #\= 0, DiffX #\= 0,
+  DiffYAbs #= abs(DiffY), DiffXAbs #= abs(DiffX),
+  DiffYAbs #= DiffXAbs,
+  (DiffY #> 0 -> DirectionY #= 1 ; DirectionY #= -1),
+  (DiffX #> 0 -> DirectionX #= 1 ; DirectionX #= -1),
   validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, 0,0).
 
 validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, CurrIndexY, CurrIndexX):-
-  NewIndexY is CurrIndexY+DirectionY,
-  NextY is Yi+NewIndexY,
+  NewIndexY #= CurrIndexY+DirectionY,
+  NextY #= Yi+NewIndexY,
 
-  NewIndexX is CurrIndexX+DirectionX,
-  NextX is Xi+NewIndexX,
+  NewIndexX #= CurrIndexX+DirectionX,
+  NextX #= Xi+NewIndexX,
 
   getMatrixElemAt(NextY, NextX, Board, NextElem),
   (
-    NextElem == 'emptyCell' -> ( (NextY == Yf, NextX == Xf) ->
-                                  (AfterY is NextY+DirectionY,
-                                   AfterX is NextX+DirectionX,
+    NextElem == 'emptyCell' -> ( (NextY #= Yf, NextX #= Xf) ->
+                                  (AfterY #= NextY+DirectionY,
+                                   AfterX #= NextX+DirectionX,
                                     getMatrixElemAt(AfterY, AfterX, Board, NextElem) ->
                                       (NextElem == 'emptyCell' -> false ; true) ; true
                                   )
