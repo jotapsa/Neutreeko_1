@@ -94,10 +94,9 @@ validate_move(m(Yi, Xi, Yf, Xf), Board):-
   validate_XY_move(m(Yi, Xi, Yf, Xf), Board).
 
 validate_X_move(m(Yi, Xi, Yf, Xf), Board):-
-  DiffX #= Xf - Xi,
-  DiffY #= Yf - Yi,
-  DiffY #= 0, DiffX #\= 0,
-  (DiffX #> 0 -> Direction #= 1 ; Direction #= -1),
+  Xf #\= Xi,
+  Yf #= Yi,
+  (Xf #> Xi -> Direction #= 1 ; Direction #= -1),
   validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, 0).
 
 validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
@@ -116,10 +115,9 @@ validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   ).
 
 validate_Y_move(m(Yi, Xi, Yf, Xf), Board):-
-  DiffX #= Xf - Xi,
-  DiffY #= Yf - Yi,
-  DiffY #\= 0, DiffX #= 0,
-  (DiffY #> 0 -> Direction #= 1 ; Direction #= -1),
+  Yf #\= Yi,
+  Xf #= Xi,
+  (Yf #> Yi -> Direction #= 1 ; Direction #= -1),
   validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, 0).
 
 validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
@@ -138,13 +136,13 @@ validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   ).
 
 validate_XY_move(m(Yi, Xi, Yf, Xf), Board):-
-  DiffX #= Xf - Xi,
-  DiffY #= Yf - Yi,
-  DiffY #\= 0, DiffX #\= 0,
+  Xf #\= Xi,
+  Yf #\= Yi,
+  DiffX #= Xf - Xi, DiffY #= Yf - Yi,
   DiffYAbs #= abs(DiffY), DiffXAbs #= abs(DiffX),
   DiffYAbs #= DiffXAbs,
-  (DiffY #> 0 -> DirectionY #= 1 ; DirectionY #= -1),
-  (DiffX #> 0 -> DirectionX #= 1 ; DirectionX #= -1),
+  (Yf #> Yi -> DirectionY #= 1 ; DirectionY #= -1),
+  (Xf #> Xi -> DirectionX #= 1 ; DirectionX #= -1),
   validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, 0,0).
 
 validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, CurrIndexY, CurrIndexX):-
