@@ -40,6 +40,9 @@ set_bot_diff(Level):-
 %= @@ board presets =%
 %====================%
 
+% blackPlayer - (1,2), (4,1), (4,3).
+% whitePlayer - (0,1), (0,3), (3,2).
+
 initial_board([
   [emptyCell,whitePiece,emptyCell,whitePiece,emptyCell],
   [emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],

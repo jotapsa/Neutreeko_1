@@ -56,10 +56,10 @@ human_play(Game, ResultantGame):-
 
   valid_moves(Board, Player, ListOfMoves):-
     get_player_piece(Player, Piece),
-    findall(m(Yi, Xi, _, _), getMatrixElemAt(Yi, Xi, Board, Piece), PlayerPieces),
+    % findall(m(Yi, Xi, _, _), getMatrixElemAt(Yi, Xi, Board, Piece), PlayerPieces),
     % Xi in 0..4, Yi in 0..4,
     X in 0..4, Y in 0..4,
-    findall(m(Yi, Xi, Y, X) , (member(m(Yi, Xi, _, _), PlayerPieces), validate_move(m(Yi, Xi, Y, X), Board)), ListOfMoves).
+    findall(m(Yi, Xi, Y, X) , (getMatrixElemAt(Yi, Xi, Board, Piece), validate_move(m(Yi, Xi, Y, X), Board)), ListOfMoves).
     % valid_moves_aux(Board, PlayerPieces, ListOfMoves, 2).
     % getMatrixElemAt(Yi, Xi, Board, Piece),
     % getMatrixElemAt(Yf, Xf, Board, emptyCell),
