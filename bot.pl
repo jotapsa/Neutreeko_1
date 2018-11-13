@@ -151,7 +151,7 @@ greedy_bot(Board, Player, ListOfMoves, Move):-
 max_value_move(Board, ListOfMoves, Move):-
   max_value_move_aux(Board, ListOfMoves, MaxValue, Move).
 
-max_value_move_aux(Board, [], -999999999, Move).
+max_value_move_aux(Board, [], -999999999, m(_,_,_,_)).
 
 max_value_move_aux(Board, [Head|Tail], MaxValue, Move):-
   max_value_move_aux(Board, Tail, TailMaxValue, TailMove),
@@ -176,17 +176,17 @@ min_value_move(Board, ListOfMoves, Move):-
 min_value_move_aux(Board, [], 9999999999, Move).
 
 min_value_move_aux(Board, [Head|Tail], MinValue, Move):-
-  min_value_move_aux(Board, Tail, TailMinMove, TailMove),
+  min_value_move_aux(Board, Tail, TailMinValue, TailMove),
   move(Head, Board, ResultantBoard),
   value(ResultantBoard, ResultantBoardValue),
-  ResultantBoardValue < TailMinMove,
+  ResultantBoardValue < TailMinValue,
   MinValue is ResultantBoardValue,
   Move is Head.
 
 min_value_move_aux(Board, [Head|Tail], MinValue, Move):-
-  min_value_move_aux(Board, Tail, TailMinMove, TailMove),
+  min_value_move_aux(Board, Tail, TailMinValue, TailMove),
   move(Head, Board, ResultantBoard),
   value(ResultantBoard, ResultantBoardValue),
-  ResultantBoardValue >= TailMaxValue,
-  MinValue is TailMaxValue,
-  Move is TailMinMove.
+  ResultantBoardValue >= TailMinValue,
+  MinValue is TailMinValue,
+  Move is TailMove.
