@@ -124,3 +124,11 @@ evaluate_game_over(Board, GameOverValue):-
     );
     GameOverValue is 0
   ).
+% 
+% choose_move(Board, Level, Move):-
+%   (
+%     Level == random -> dumb_bot(Board, Move);
+%     greedy_bot(Board,Move)
+%   ).
+%
+% dumb_bot(Board, Move):-

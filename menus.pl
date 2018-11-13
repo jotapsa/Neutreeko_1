@@ -79,7 +79,7 @@ print_game_mode_menu:-
   write('=  1. Player vs. Player                            ='),nl,
   write('=  2. Player vs. Computer                          ='),nl,
   write('=  3. Computer vs. Computer                        ='),nl,
-  write('=  4. Set Computer Difficulty                      ='),nl,
+  write('=  4. Set Computer Difficulty                       ='),nl,
   write('=  5. Back                                         ='),nl,
   write('=                                                  ='),nl,
   write('===================================================='),nl,
@@ -89,10 +89,9 @@ difficulty_menu:-
   print_difficulty_menu,
   getChar(Input),
   (
-    Input = '1' -> set_bot_diff(easy), game_mode_menu;
-    Input = '2' -> set_bot_diff(medium), game_mode_menu;
-    Input = '3' -> set_bot_diff(hard), game_mode_menu;
-    Input = '4';
+    Input = '1' -> set_bot_diff(random), game_mode_menu;
+    Input = '2' -> set_bot_diff(greedy), game_mode_menu;
+    Input = '3';
 
     nl,
 		write('Error: invalid input.'), nl,
@@ -112,10 +111,9 @@ print_difficulty_menu:-
   write('=  | | | |  __/ |_| | |_| | |  __/  __/   < (_) |  ='),nl,
   write('=  |_| |_|\\___|\\__,_|\\__|_|  \\___|\\___|_|\\_\\___/   ='),nl,
   write('=                                                  ='),nl,
-  write('=  1. Easy                                         ='),nl,
-  write('=  2. Medium                                       ='),nl,
-  write('=  3. Hard                                         ='),nl,
-  write('=  4. Back                                         ='),nl,
+  write('=  1. Random                                       ='),nl,
+  write('=  2. Greedy                                       ='),nl,
+  write('=  3. Back                                         ='),nl,
   write('=                                                  ='),nl,
   write('===================================================='),nl,
   write('Choose an option: '),nl.

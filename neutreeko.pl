@@ -22,7 +22,7 @@ piece_owner(whitePiece, whitePlayer).
 piece_owner(blackPiece, blackPlayer).
 
 :-dynamic bot_diff/1.
-bot_diff(easy).
+bot_diff(random).
 
 %p = player, b = bot
 game_mode(pvp).
