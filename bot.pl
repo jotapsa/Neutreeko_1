@@ -3,6 +3,9 @@ piece_value(emptyCell, 0).
 piece_value(whitePiece, 1).
 piece_value(blackPiece, -1).
 
+maximizing(whitePlayer).
+minimizing(blackPlayer).
+
 %board_weight(ColIterator, RowIterator, Value)
 board_weight(0,0,100).
 board_weight(0,1,250).
@@ -124,11 +127,66 @@ evaluate_game_over(Board, GameOverValue):-
     );
     GameOverValue is 0
   ).
-% 
-% choose_move(Board, Level, Move):-
-%   (
-%     Level == random -> dumb_bot(Board, Move);
-%     greedy_bot(Board,Move)
-%   ).
-%
-% dumb_bot(Board, Move):-
+
+choose_move(Board, Player, Level, Move):-
+  valid_moves(Board, Player, ListOfMoves),
+  (
+    Level == random -> dumb_bot(Board, ListOfMoves, Move);
+    greedy_bot(Board, Player, ListOfMoves, Move)
+  ).
+
+dumb_bot(Board, ListOfMoves, Move):-
+  length(ListOfMoves, Length),
+  random(0, Length, MoveIndex),
+  nth0(MoveIndex, ListOfMoves, Move).
+
+greedy_bot(Board, Player, ListOfMoves, Move):-
+  maximizing(Player),
+  max_value_move(Board, ListOfMoves, Move).
+
+greedy_bot(Board, Player, ListOfMoves, Move):-
+  minimizing(Player),
+  min_value_move(Board, ListOfMoves, Move).
+
+max_value_move(Board, ListOfMoves, Move):-
+  max_value_move_aux(Board, ListOfMoves, MaxValue, Move).
+
+max_value_move_aux(Board, [], -999999999, Move).
+
+max_value_move_aux(Board, [Head|Tail], MaxValue, Move):-
+  max_value_move_aux(Board, Tail, TailMaxValue, TailMove),
+  move(Head, Board, ResultantBoard),
+  value(ResultantBoard, ResultantBoardValue),
+  ResultantBoardValue > TailMaxValue,
+  MaxValue is ResultantBoardValue,
+  Move is Head.
+
+max_value_move_aux(Board, [Head|Tail], MaxValue, Move):-
+  max_value_move_aux(Board, Tail, TailMaxValue, TailMove),
+  move(Head, Board, ResultantBoard),
+  value(ResultantBoard, ResultantBoardValue),
+  ResultantBoardValue =< TailMaxValue,
+  MaxValue is TailMaxValue,
+  Move is TailMove.
+
+
+min_value_move(Board, ListOfMoves, Move):-
+  min_value_move_aux(Board, ListOfMoves, MinValue, Move).
+
+max_value_move_aux(Board, [], 9999999999, Move).
+
+min_value_move_aux(Board, [Head|Tail], MinValue, Move):-
+  min_value_move_aux(Board, Tail, TailMinMove, TailMove),
+  move(Head, Board, ResultantBoard),
+  value(ResultantBoard, ResultantBoardValue),
+  ResultantBoardValue < TailMinMove,
+  MinValue is ResultantBoardValue,
+  Move is Head.
+
+min_value_move_aux(Board, [Head|Tail], MinValue, Move):-
+  min_value_move_aux(Board, Tail, TailMinMove, TailMove),
+  move(Head, Board, ResultantBoard),
+  value(ResultantBoard, ResultantBoardValue),
+  ResultantBoardValue >= TailMaxValue,
+  MinValue is TailMaxValue,
+  Move is TailMinMove.
