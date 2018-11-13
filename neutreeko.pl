@@ -45,16 +45,19 @@ human_play(Game, ResultantGame):-
 
   clear_console,
   display_game(Board, Player),
-  get_piece_source_coords(m(Yi, Xi, _, _)),
-  validate_chosen_piece_ownership(m(Yi, Xi, _, _), Board, Player),
-
-  clear_console,
-  display_game(Board, Player),
-  get_piece_destiny_coords(m(_, _, Yf, Xf)),
-  validate_coordinates_different(m(Yi, Xi, Yf, Xf)),
-
-  validate_move(m(Yi, Xi, Yf, Xf), Board),
-  move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard),
+  valid_moves(Board, Player, ListOfMoves), display_moves(ListOfMoves, 1),
+  get_move_index(Index),
+  % get_piece_source_coords(m(Yi, Xi, _, _)),
+  % validate_chosen_piece_ownership(m(Yi, Xi, _, _), Board, Player),
+  %
+  % clear_console,
+  % display_game(Board, Player),
+  % get_piece_destiny_coords(m(_, _, Yf, Xf)),
+  % validate_coordinates_different(m(Yi, Xi, Yf, Xf)),
+  %
+  % validate_move(m(Yi, Xi, Yf, Xf), Board),
+  getListElemAt(Index, ListOfMoves, Move),
+  move(Move, Board, ResultantBoard),
   set_game_board(ResultantBoard, Game, ResultantGame), !.
 
 valid_moves(Board, Player, ListOfMoves):-
@@ -183,6 +186,10 @@ next_turn(Game, ResultantGame):-
 %===========================%
 %= @@ game input functions =%
 %===========================%
+
+get_move_index(Index):-
+	write('Please insert the move you wish to do and press <Enter> - example: 1.'), nl,
+	get_int(MoveIndex), Index is MoveIndex-1,nl.
 
 get_piece_source_coords(m(Yi, Xi, _, _)):-
 	write('Please insert the coordinates of the piece you wish to move and press <Enter> - example: 3f.'), nl,
