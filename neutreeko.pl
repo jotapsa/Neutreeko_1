@@ -1,6 +1,7 @@
 :-use_module(library(lists)).
 :-use_module(library(random)).
 :- use_module(library(aggregate)).
+:- use_module(library(between)).
 :-include('utilities.pl').
 :-include('containers.pl').
 :-include('menus.pl').
@@ -58,10 +59,11 @@ human_play(Game, ResultantGame):-
 
 valid_moves(Board, Player, ListOfMoves):-
   get_player_piece(Player, Piece),
-  % findall(m(Yi, Xi, _, _), getMatrixElemAt(Yi, Xi, Board, Piece), PlayerPieces),
-  getMatrixElemAt(Yi, Xi, Board, Piece),
-  getMatrixElemAt(Yf, Xf, Board, emptyCell),
-  findall(m(Yi, Xi, Yf, Xf), validate_move(m(Yi, Xi, Yf, Xf), Board), ListOfMoves).
+  findall(m(Yi, Xi, Y, X) , (
+        getMatrixElemAt(Yi, Xi, Board, Piece),
+        between(0, 4, Y), between(0, 4, X),
+        validate_move(m(Yi, Xi, Y, X), Board)
+      ), ListOfMoves).
 
 %==============================================%
 %= @@ board validation/manipulation functions =%
