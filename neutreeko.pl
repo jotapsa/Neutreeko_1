@@ -30,13 +30,32 @@ game_mode(pvb).
 game_mode(bvb).
 
 play_game(Game):-
-  % game_over(board, winner), !, announce(result).
-  false, !.
+  get_game_board(Game, Board),
+  game_over(Board, Winner), !, announce(Winner).
 
 play_game(Game):-
+  get_game_mode(Game, Mode),
+  Mode == pvp,
   human_play(Game, TempGame),
   next_turn(TempGame, ResultantGame),
-  play_game(ResultantGame).
+  play_game(ResultantGame), !.
+
+play_game(Game):-
+  get_game_mode(Game, Mode),
+  Mode == pvb,
+  human_play(Game, TempGame1),
+  next_turn(TempGame1, TempGame2),
+  bot_play(TempGame2, TempGame3),
+  next_turn(TempGame3, ResultantGame),
+  play_game(ResultantGame), !.
+
+bot_play(Game, ResultantGame):-
+  get_game_board(Game, Board),
+  get_game_player_turn(Game, Player),
+  bot_diff(Level),
+  choose_move(Board, Player, Level, Move),
+  move(Move, Board, ResultantBoard),
+  set_game_board(ResultantBoard, Game, ResultantGame), !.
 
 human_play(Game, ResultantGame):-
   get_game_board(Game, Board), get_game_player_turn(Game, Player),

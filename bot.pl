@@ -173,7 +173,7 @@ max_value_move_aux(Board, [Head|Tail], MaxValue, Move):-
 min_value_move(Board, ListOfMoves, Move):-
   min_value_move_aux(Board, ListOfMoves, MinValue, Move).
 
-max_value_move_aux(Board, [], 9999999999, Move).
+min_value_move_aux(Board, [], 9999999999, Move).
 
 min_value_move_aux(Board, [Head|Tail], MinValue, Move):-
   min_value_move_aux(Board, Tail, TailMinMove, TailMove),

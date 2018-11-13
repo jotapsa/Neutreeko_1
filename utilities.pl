@@ -2,6 +2,14 @@
 %= @@ console utilities =%
 %========================%
 
+announce(Winner):-
+  Winner == whitePlayer,
+  write('White Player won!').
+
+announce(Winner):-
+  Winner == blackPlayer,
+  write('Black Player won!').
+
 clear_console:-
 	clear_console(40), !.
 
