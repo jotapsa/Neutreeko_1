@@ -39,3 +39,7 @@ getChar(Input):-
 get_int(Input):-
 	get_code(TempInput),
 	Input is TempInput - 48.
+
+get_move_int(Input):-
+	read(TempInput),
+	(integer(TempInput) -> Input = TempInput; fail).

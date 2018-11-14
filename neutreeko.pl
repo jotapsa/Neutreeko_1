@@ -227,7 +227,8 @@ next_turn(Game, ResultantGame):-
 
 get_move_index(Index):-
 	write('Please insert the move you wish to do and press <Enter> - example: 1.'), nl,
-	read(MoveIndex), Index is MoveIndex-1,nl.
+  get_move_int(MoveIndex),
+  Index is MoveIndex-1,nl.
 
 get_piece_source_coords(m(Yi, Xi, _, _)):-
 	write('Please insert the coordinates of the piece you wish to move and press <Enter> - example: 3f.'), nl,
