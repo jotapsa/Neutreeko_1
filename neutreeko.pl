@@ -14,37 +14,6 @@
 play:-
   main_menu.
 
-player(whitePlayer).
-player(blackPlayer).
-
-piece(whitePiece).
-piece(blackPiece).
-
-piece_owner(whitePiece, whitePlayer).
-piece_owner(blackPiece, blackPlayer).
-
-next_turn(whitePlayer, blackPlayer).
-next_turn(blackPlayer, whitePlayer).
-
-:-dynamic game_board/1.
-game_board([
-  [emptyCell,whitePiece,emptyCell,whitePiece,emptyCell],
-  [emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
-  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
-  [emptyCell,emptyCell,whitePiece,emptyCell,emptyCell],
-  [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
-  ]).
-
-:-dynamic game_turn/1.
-game_turn(blackPlayer).
-
-:-dynamic bot_diff/1.
-bot_diff(random).
-
-%p = player, b = bot
-:-dynamic game_mode/1.
-game_mode(pvp).
-
 play_game:-
   game_board(Board),
   game_over(Board, Winner), !,
@@ -133,22 +102,6 @@ human_play(Board, Player, ResultantBoard):-
   get_move_index(Index),
   getListElemAt(Index, ListOfMoves, Move),
   move(Move, Board, ResultantBoard).
-
-%
-% human_play(Game, ResultantGame):-
-%   get_game_board(Game, Board),
-%   get_game_player_turn(Game, Player),
-%
-%   repeat,
-%
-%   clear_console,
-%   display_game(Board, Player),
-%   valid_moves(Board, Player, ListOfMoves),
-%   display_moves(ListOfMoves, 1),
-%   get_move_index(Index),
-%   getListElemAt(Index, ListOfMoves, Move),
-%   move(Move, Board, ResultantBoard),
-%   set_game_board(ResultantBoard, Game, ResultantGame), !.
 
 valid_moves(Board, Player, ListOfMoves):-
   get_player_piece(Player, Piece),
@@ -265,14 +218,6 @@ move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
   setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
   setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
-% next_turn(Game, ResultantGame):-
-%   get_game_player_turn(Game, Player),
-%   (
-%     Player == whitePlayer -> NextPlayer = blackPlayer;
-%     NextPlayer = whitePlayer
-%   ),
-%   set_game_player_turn(NextPlayer, Game, ResultantGame).
-
 %===========================%
 %= @@ game input functions =%
 %===========================%
@@ -302,28 +247,30 @@ input_coords(Y, X):-
 
 checkVertical(Board, Piece) :-
   getMatrixElemAt(X, Y, Board, Piece),
-  Piece \= 'emptyCell', X1 is X+1, X2 is X+2,
+  piece(Piece),
+  X1 is X+1, X2 is X+2,
   getMatrixElemAt(X1, Y, Board, Elem2),
   getMatrixElemAt(X2, Y, Board, Elem3),
   Piece == Elem2, Piece == Elem3.
 
 checkHorizontal(Board, Piece) :-
   getMatrixElemAt(X, Y, Board, Piece),
-  Piece \= 'emptyCell', Y1 is Y+1, Y2 is Y+2,
+  piece(Piece),
+  Y1 is Y+1, Y2 is Y+2,
   getMatrixElemAt(X, Y1, Board, Elem2),
   getMatrixElemAt(X, Y2, Board, Elem3),
   Piece == Elem2, Piece == Elem3.
 
 checkDiagonal(Board, Piece) :-  (
   getMatrixElemAt(X, Y, Board, Piece),
-  Piece \= 'emptyCell',
+  piece(Piece),
   X1 is X+1, X2 is X+2, Y1 is Y+1, Y2 is Y+2,
   getMatrixElemAt(X1, Y1, Board, Elem2),
   getMatrixElemAt(X2, Y2, Board, Elem3),
   Piece == Elem2, Piece == Elem3
   );
   (getMatrixElemAt(X, Y, Board, Piece),
-  Piece \= 'emptyCell',
+  piece(Piece),
   X1 is X+1, X2 is X+2, Y1 is Y-1, Y2 is Y-2,
   getMatrixElemAt(X1, Y1, Board, Elem2),
   getMatrixElemAt(X2, Y2, Board, Elem3),

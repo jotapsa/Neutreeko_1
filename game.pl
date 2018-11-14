@@ -1,3 +1,32 @@
+piece(whitePiece).
+piece(blackPiece).
+
+piece_owner(whitePiece, whitePlayer).
+piece_owner(blackPiece, blackPlayer).
+
+next_turn(whitePlayer, blackPlayer).
+next_turn(blackPlayer, whitePlayer).
+
+:-dynamic game_board/1.
+game_board([
+[emptyCell,whitePiece,emptyCell,whitePiece,emptyCell],
+[emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
+[emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+[emptyCell,emptyCell,whitePiece,emptyCell,emptyCell],
+[emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
+]).
+
+:-dynamic game_turn/1.
+game_turn(blackPlayer).
+
+:-dynamic bot_diff/1.
+bot_diff(random).
+
+%p = player, b = bot
+:-dynamic game_mode/1.
+game_mode(pvp).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
 configure_pvp_game:-
   initial_board(Board),
   set_game_board(Board),
