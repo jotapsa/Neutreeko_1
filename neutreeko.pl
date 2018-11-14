@@ -3,6 +3,7 @@
 :-use_module(library(aggregate)).
 :-use_module(library(between)).
 :-use_module(library(system)).
+
 :-include('utilities.pl').
 :-include('containers.pl').
 :-include('menus.pl').
@@ -22,81 +23,132 @@ piece(blackPiece).
 piece_owner(whitePiece, whitePlayer).
 piece_owner(blackPiece, blackPlayer).
 
+next_turn(whitePlayer, blackPlayer).
+next_turn(blackPlayer, whitePlayer).
+
+:-dynamic game_board/1.
+game_board([
+  [emptyCell,whitePiece,emptyCell,whitePiece,emptyCell],
+  [emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
+  [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+  [emptyCell,emptyCell,whitePiece,emptyCell,emptyCell],
+  [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
+  ]).
+
+:-dynamic game_turn/1.
+game_turn(blackPlayer).
+
 :-dynamic bot_diff/1.
 bot_diff(random).
 
 %p = player, b = bot
+:-dynamic game_mode/1.
 game_mode(pvp).
-game_mode(pvb).
-game_mode(bvp).
-game_mode(bvb).
 
-play_game(Game):-
-  get_game_board(Game, Board),
-  get_game_player_turn(Game, Player),
+play_game:-
+  game_board(Board),
   game_over(Board, Winner), !,
-  display_game(Board, Player),
+  display_game(Board),
   announce(Winner).
 
-play_game(Game):-
-  get_game_mode(Game, Mode),
+play_game:-
+  game_mode(Mode),
   Mode == pvp,
-  human_play(Game, TempGame),
-  next_turn(TempGame, ResultantGame),
-  play_game(ResultantGame), !.
+  game_board(Board), game_turn(CurrentTurn),
 
-play_game(Game):-
-  get_game_mode(Game, Mode),
+  human_play(Board, CurrentTurn, ResultantBoard),
+  set_game_board(ResultantBoard),
+  next_turn(CurrentTurn, NextTurn),
+  set_game_turn(NextTurn),
+  play_game, !.
+
+play_game:-
+  game_mode(Mode),
   Mode == pvb,
-  human_play(Game, TempGame1),
-  next_turn(TempGame1, TempGame2),
-  bot_play(TempGame2, TempGame3),
-  next_turn(TempGame3, ResultantGame),
-  play_game(ResultantGame), !.
+  game_board(Board), game_turn(CurrentTurn),
+  (
+    (CurrentTurn == blackPlayer,
+    human_play(Board, CurrentTurn, ResultantBoard),
+    set_game_board(ResultantBoard),
+    next_turn(CurrentTurn, NextTurn),
+    set_game_turn(NextTurn), !,
+    play_game, !
+    );
+    (CurrentTurn == whitePlayer,
+    bot_play(Board, CurrentTurn, ResultantBoard),
+    set_game_board(ResultantBoard),
+    next_turn(CurrentTurn, NextTurn),
+    set_game_turn(NextTurn), !,
+    play_game, !
+    )
+  ).
 
-play_game(Game):-
-  get_game_mode(Game, Mode),
-  Mode == bvp,
-  bot_play(Game, TempGame1),
-  next_turn(TempGame1, TempGame2),
-  human_play(TempGame2, TempGame3),
-  next_turn(TempGame3, ResultantGame),
-  play_game(ResultantGame), !.
+  play_game:-
+    game_mode(Mode),
+    Mode == bvp,
+    game_board(Board), game_turn(CurrentTurn),
+    (
+      (CurrentTurn == whitePlayer,
+      human_play(Board, CurrentTurn, ResultantBoard),
+      set_game_board(ResultantBoard),
+      next_turn(CurrentTurn, NextTurn),
+      set_game_turn(NextTurn), !,
+      play_game, !
+      );
+      (CurrentTurn == blackPlayer,
+      bot_play(Board, CurrentTurn, ResultantBoard),
+      set_game_board(ResultantBoard),
+      next_turn(CurrentTurn, NextTurn),
+      set_game_turn(NextTurn), !,
+      play_game, !
+      )
+    ).
 
-play_game(Game):-
-  get_game_mode(Game, Mode),
-  get_game_board(Game, Board),
-  get_game_player_turn(Game, Player),
+play_game:-
+  game_mode(Mode),
   Mode == bvb,
-  display_game(Board, Player),
+
+  game_board(Board),
+  game_turn(CurrentTurn),
+  display_game(Board, CurrentTurn),
   sleep(1),
-  bot_play(Game, TempGame1),
-  next_turn(TempGame1, ResultantGame),
-  play_game(ResultantGame), !.
+  bot_play(Board, CurrentTurn, ResultantBoard),
+  set_game_board(ResultantBoard),
+  next_turn(CurrentTurn, NextTurn),
+  set_game_turn(NextTurn), !,
+  play_game, !.
 
-bot_play(Game, ResultantGame):-
-  get_game_board(Game, Board),
-  get_game_player_turn(Game, Player),
-
+bot_play(Board, Player, ResultantBoard):-
   bot_diff(Level),
   choose_move(Board, Player, Level, Move),
-  move(Move, Board, ResultantBoard),
-  set_game_board(ResultantBoard, Game, ResultantGame), !.
+  move(Move, Board, ResultantBoard).
 
-human_play(Game, ResultantGame):-
-  get_game_board(Game, Board),
-  get_game_player_turn(Game, Player),
-
+human_play(Board, Player, ResultantBoard):-
   repeat,
 
   clear_console,
-  display_game(Board, Player),
+  display_game(Board,Player),
   valid_moves(Board, Player, ListOfMoves),
   display_moves(ListOfMoves, 1),
   get_move_index(Index),
   getListElemAt(Index, ListOfMoves, Move),
-  move(Move, Board, ResultantBoard),
-  set_game_board(ResultantBoard, Game, ResultantGame), !.
+  move(Move, Board, ResultantBoard).
+
+%
+% human_play(Game, ResultantGame):-
+%   get_game_board(Game, Board),
+%   get_game_player_turn(Game, Player),
+%
+%   repeat,
+%
+%   clear_console,
+%   display_game(Board, Player),
+%   valid_moves(Board, Player, ListOfMoves),
+%   display_moves(ListOfMoves, 1),
+%   get_move_index(Index),
+%   getListElemAt(Index, ListOfMoves, Move),
+%   move(Move, Board, ResultantBoard),
+%   set_game_board(ResultantBoard, Game, ResultantGame), !.
 
 valid_moves(Board, Player, ListOfMoves):-
   get_player_piece(Player, Piece),
@@ -213,13 +265,13 @@ move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
   setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
   setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
-next_turn(Game, ResultantGame):-
-  get_game_player_turn(Game, Player),
-  (
-    Player == whitePlayer -> NextPlayer = blackPlayer;
-    NextPlayer = whitePlayer
-  ),
-  set_game_player_turn(NextPlayer, Game, ResultantGame).
+% next_turn(Game, ResultantGame):-
+%   get_game_player_turn(Game, Player),
+%   (
+%     Player == whitePlayer -> NextPlayer = blackPlayer;
+%     NextPlayer = whitePlayer
+%   ),
+%   set_game_player_turn(NextPlayer, Game, ResultantGame).
 
 %===========================%
 %= @@ game input functions =%

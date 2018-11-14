@@ -39,17 +39,20 @@ print_main_menu:-
   write('Choose an option: '),nl.
 
 start_pvp_game:-
-	createPvPGame(Game),
-	play_game(Game).
+  configure_pvb_game,
+  play_game.
+
 start_pvb_game:-
-  createPvBGame(Game),
-	play_game(Game).
+  configure_pvb_game,
+  play_game.
+
 start_bvp_game:-
-  createBvPGame(Game),
-  play_game(Game).
+  configure_bvp_game,
+  play_game.
+
 start_bvb_game:-
-  createBvBGame(Game),
-  play_game(Game).
+  configure_bvb_game,
+  play_game.
 
 game_mode_menu:-
   print_game_mode_menu,
