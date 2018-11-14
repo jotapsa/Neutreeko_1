@@ -10,6 +10,9 @@ createPvPGame(Game):-
 createPvBGame(Game):-
 	initial_board(Board),
 	Game = [Board, blackPlayer, pvb], !.
+createBvPGame(Game):-
+	initial_board(Board),
+	Game = [Board, blackPlayer, bvp], !.
 createBvBGame(Game):-
 	initial_board(Board),
 	Game = [Board, blackPlayer, bvb], !.

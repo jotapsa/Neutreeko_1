@@ -1,7 +1,8 @@
 :-use_module(library(lists)).
 :-use_module(library(random)).
-:- use_module(library(aggregate)).
-:- use_module(library(between)).
+:-use_module(library(aggregate)).
+:-use_module(library(between)).
+:-use_module(library(system)).
 :-include('utilities.pl').
 :-include('containers.pl').
 :-include('menus.pl').
@@ -27,11 +28,15 @@ bot_diff(random).
 %p = player, b = bot
 game_mode(pvp).
 game_mode(pvb).
+game_mode(bvp).
 game_mode(bvb).
 
 play_game(Game):-
   get_game_board(Game, Board),
-  game_over(Board, Winner), !, announce(Winner).
+  get_game_player_turn(Game, Player),
+  game_over(Board, Winner), !,
+  display_game(Board, Player),
+  announce(Winner).
 
 play_game(Game):-
   get_game_mode(Game, Mode),
@@ -49,22 +54,45 @@ play_game(Game):-
   next_turn(TempGame3, ResultantGame),
   play_game(ResultantGame), !.
 
+play_game(Game):-
+  get_game_mode(Game, Mode),
+  Mode == bvp,
+  bot_play(Game, TempGame1),
+  next_turn(TempGame1, TempGame2),
+  human_play(TempGame2, TempGame3),
+  next_turn(TempGame3, ResultantGame),
+  play_game(ResultantGame), !.
+
+play_game(Game):-
+  get_game_mode(Game, Mode),
+  get_game_board(Game, Board),
+  get_game_player_turn(Game, Player),
+  Mode == bvb,
+  display_game(Board, Player),
+  sleep(1),
+  bot_play(Game, TempGame1),
+  next_turn(TempGame1, ResultantGame),
+  play_game(ResultantGame), !.
+
 bot_play(Game, ResultantGame):-
   get_game_board(Game, Board),
   get_game_player_turn(Game, Player),
+
   bot_diff(Level),
   choose_move(Board, Player, Level, Move),
   move(Move, Board, ResultantBoard),
   set_game_board(ResultantBoard, Game, ResultantGame), !.
 
 human_play(Game, ResultantGame):-
-  get_game_board(Game, Board), get_game_player_turn(Game, Player),
+  get_game_board(Game, Board),
+  get_game_player_turn(Game, Player),
 
   repeat,
 
   clear_console,
   display_game(Board, Player),
-  valid_moves(Board, Player, ListOfMoves), display_moves(ListOfMoves, 1),
+  valid_moves(Board, Player, ListOfMoves),
+  display_moves(ListOfMoves, 1),
   get_move_index(Index),
   getListElemAt(Index, ListOfMoves, Move),
   move(Move, Board, ResultantBoard),

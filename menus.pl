@@ -44,6 +44,9 @@ start_pvp_game:-
 start_pvb_game:-
   createPvBGame(Game),
 	play_game(Game).
+start_bvp_game:-
+  createBvPGame(Game),
+  play_game(Game).
 start_bvb_game:-
   createBvBGame(Game),
   play_game(Game).
@@ -54,9 +57,10 @@ game_mode_menu:-
   (
 		Input = '1' -> start_pvp_game;
   	Input = '2' -> start_pvb_game;
-	  Input = '3' -> start_bvb_game;
-	  Input = '4' -> difficulty_menu;
-    Input = '5';
+    Input = '3' -> start_bvp_game;
+	  Input = '4' -> start_bvb_game;
+	  Input = '5' -> difficulty_menu;
+    Input = '6';
 
     nl,
 		write('Error: invalid input.'), nl,
@@ -77,10 +81,11 @@ print_game_mode_menu:-
   write('=  |_| |_|\\___|\\__,_|\\__|_|  \\___|\\___|_|\\_\\___/   ='),nl,
   write('=                                                  ='),nl,
   write('=  1. Player vs. Player                            ='),nl,
-  write('=  2. Player vs. Computer                          ='),nl,
-  write('=  3. Computer vs. Computer                        ='),nl,
-  write('=  4. Set Computer Difficulty                       ='),nl,
-  write('=  5. Back                                         ='),nl,
+  write('=  2. Player vs. Computer (Player goes first)       ='),nl,
+  write('=  3. Computer vs. Player (Computer goes first)     ='),nl,
+  write('=  4. Computer vs. Computer                        ='),nl,
+  write('=  5. Set Computer Difficulty                       ='),nl,
+  write('=  6. Back                                         ='),nl,
   write('=                                                  ='),nl,
   write('===================================================='),nl,
   write('Choose an option: '),nl.
