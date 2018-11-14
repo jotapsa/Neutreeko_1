@@ -52,26 +52,26 @@ play_game:-
     )
   ).
 
-  play_game:-
-    game_mode(Mode),
-    Mode == bvp,
-    game_board(Board), game_turn(CurrentTurn),
-    (
-      (CurrentTurn == whitePlayer,
-      human_play(Board, CurrentTurn, ResultantBoard),
-      set_game_board(ResultantBoard),
-      next_turn(CurrentTurn, NextTurn),
-      set_game_turn(NextTurn), !,
-      play_game, !
-      );
-      (CurrentTurn == blackPlayer,
-      bot_play(Board, CurrentTurn, ResultantBoard),
-      set_game_board(ResultantBoard),
-      next_turn(CurrentTurn, NextTurn),
-      set_game_turn(NextTurn), !,
-      play_game, !
-      )
-    ).
+play_game:-
+  game_mode(Mode),
+  Mode == bvp,
+  game_board(Board), game_turn(CurrentTurn),
+  (
+    (CurrentTurn == whitePlayer,
+    human_play(Board, CurrentTurn, ResultantBoard),
+    set_game_board(ResultantBoard),
+    next_turn(CurrentTurn, NextTurn),
+    set_game_turn(NextTurn), !,
+    play_game, !
+    );
+    (CurrentTurn == blackPlayer,
+    bot_play(Board, CurrentTurn, ResultantBoard),
+    set_game_board(ResultantBoard),
+    next_turn(CurrentTurn, NextTurn),
+    set_game_turn(NextTurn), !,
+    play_game, !
+    )
+  ).
 
 play_game:-
   game_mode(Mode),
@@ -114,25 +114,6 @@ valid_moves(Board, Player, ListOfMoves):-
 %==============================================%
 %= @@ board validation/manipulation functions =%
 %==============================================%
-
-validate_chosen_piece_ownership(m(Yi, Xi, _, _), Board, Player):-
-	getMatrixElemAt(Yi, Xi, Board, Piece),
-	piece_owner(Piece, Player), !.
-
-validate_chosen_piece_ownership(m(_, _, _, _), _, _):-
-	write('# INVALID PIECE!'), nl,
-	write('# A player can only move his/her own pieces.'), nl,
-	print_enter_to_continue, nl,
-	fail.
-
-validate_coordinates_different(m(Yi, Xi, Yf, Xf)):-
-	(Yi \= Yf ; Xi \= Xf), !.
-
-validate_coordinates_different(m(_, _, _, _)):-
-	write('# INVALID INPUT!'), nl,
-	write('# The source and destiny coordinates must be different.'), nl,
-	print_enter_to_continue, nl,
-	fail.
 
 validate_move(m(Yi, Xi, Yf, Xf), Board):-
   validate_X_move(m(Yi, Xi, Yf, Xf), Board);
@@ -212,38 +193,17 @@ validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, CurrIndex
                                ) ; false
   ).
 
-
 move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
   getMatrixElemAt(Yi, Xi, Board, SrcElem),
   setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
   setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
-%===========================%
-%= @@ game input functions =%
-%===========================%
-
-get_move_index(Index):-
-	write('Please insert the move you wish to do and press <Enter> - example: 1.'), nl,
-  get_move_int(MoveIndex),
-  Index is MoveIndex-1,nl.
-
-get_piece_source_coords(m(Yi, Xi, _, _)):-
-	write('Please insert the coordinates of the piece you wish to move and press <Enter> - example: 3f.'), nl,
-	input_coords(Yi, Xi), nl.
-
-get_piece_destiny_coords(m(_, _, Yf, Xf)):-
-  write('Please insert the destiny coordinates that piece and press <Enter>'), nl,
-  input_coords(Yf, Xf), nl.
-
-input_coords(Y, X):-
-	get_int(RawSrcLine),
-	get_code(RawSrcColumn),
-
-	discard_input_char,
-
-	% process row and column
-	Y is RawSrcLine-1,
-	X is RawSrcColumn-48-48-1.
+game_over(Board, Winner) :-(
+  checkVertical(Board, Piece) ;
+  checkHorizontal(Board, Piece) ;
+  checkDiagonal(Board, Piece)), (
+  Piece == 'blackPiece' -> Winner = 'blackPlayer' ;
+  (Piece == 'whitePiece' -> Winner = 'whitePlayer' ; false)).
 
 checkVertical(Board, Piece) :-
   getMatrixElemAt(X, Y, Board, Piece),
@@ -277,9 +237,11 @@ checkDiagonal(Board, Piece) :-  (
   Piece == Elem2, Piece == Elem3
   ).
 
-game_over(Board, Winner) :-(
-  checkVertical(Board, Piece) ;
-  checkHorizontal(Board, Piece) ;
-  checkDiagonal(Board, Piece)), (
-  Piece == 'blackPiece' -> Winner = 'blackPlayer' ;
-  (Piece == 'whitePiece' -> Winner = 'whitePlayer' ; false)).
+%===========================%
+%= @@ game input functions =%
+%===========================%
+
+get_move_index(Index):-
+	write('Please insert the move you wish to do and press <Enter> - example: 1.'), nl,
+  get_move_int(MoveIndex),
+  Index is MoveIndex-1,nl.

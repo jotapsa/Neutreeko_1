@@ -74,6 +74,7 @@ set_bot_diff(Level):-
   nonvar(Level),
   retract(bot_diff(_)),
   asserta(bot_diff(Level)).
+  
 %====================%
 %= @@ board presets =%
 %====================%

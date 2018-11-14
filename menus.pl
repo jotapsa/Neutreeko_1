@@ -16,8 +16,6 @@ main_menu:-
     main_menu
   ).
 
-%TODO: Center printmain_menu & fix other menus
-
 print_main_menu:-
   clear_console,
   write('===================================================='),nl,

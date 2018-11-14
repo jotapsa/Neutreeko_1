@@ -3,12 +3,14 @@
 %========================%
 
 announce(Winner):-
+  (
   Winner == whitePlayer,
-  write('White Player won!').
-
-announce(Winner):-
+  write('White Player won!')
+  );
+  (
   Winner == blackPlayer,
-  write('Black Player won!').
+  write('Black Player won!')
+  ).
 
 clear_console:-
 	clear_console(40), !.
@@ -35,11 +37,10 @@ getChar(Input):-
   get_char(Input),
   get_char(_).
 
-%in ascii: ascii_code(1)-48 = 1.
-get_int(Input):-
-	get_code(TempInput),
-	Input is TempInput - 48.
-
 get_move_int(Input):-
 	read(TempInput),
-	(integer(TempInput) -> Input = TempInput; fail).
+  (
+  integer(TempInput),
+  Input = TempInput
+  );
+  fail.

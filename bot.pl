@@ -1,4 +1,3 @@
-%min maColIterator with alpha beta pruning
 piece_value(emptyCell, 0).
 piece_value(whitePiece, 1).
 piece_value(blackPiece, -1).
@@ -6,7 +5,6 @@ piece_value(blackPiece, -1).
 maximizing(whitePlayer).
 minimizing(blackPlayer).
 
-%board_weight(ColIterator, RowIterator, Value)
 board_weight(0,0,100).
 board_weight(0,1,250).
 board_weight(0,2,500).
@@ -27,8 +25,6 @@ board_weight(4,2,500).
 board_weight(4,3,250).
 board_weight(4,4,100).
 
-
-%We need to somehow initialize Value at 0
 value(Board, Value):-
   evaluate_board_pieces(Board, PiecesValue, 0),
   evaluate_board_state(Board, StateValue, 0),
