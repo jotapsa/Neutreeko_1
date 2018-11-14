@@ -65,21 +65,44 @@ play_game:-
 play_game:-
   game_mode(Mode),
   Mode == pvb,
-  game_turn(CurrentTurn),
-  (CurrentTurn == blackPlayer,
+  game_board(Board), game_turn(CurrentTurn),
+  (
+    (CurrentTurn == blackPlayer,
     human_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
     set_game_turn(NextTurn), !,
     play_game, !
-  );
-  (CurrentTurn == whitePlayer,
+    );
+    (CurrentTurn == whitePlayer,
     bot_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
     set_game_turn(NextTurn), !,
     play_game, !
+    )
   ).
+
+  play_game:-
+    game_mode(Mode),
+    Mode == bvp,
+    game_board(Board), game_turn(CurrentTurn),
+    (
+      (CurrentTurn == whitePlayer,
+      human_play(Board, CurrentTurn, ResultantBoard),
+      set_game_board(ResultantBoard),
+      next_turn(CurrentTurn, NextTurn),
+      set_game_turn(NextTurn), !,
+      play_game, !
+      );
+      (CurrentTurn == blackPlayer,
+      bot_play(Board, CurrentTurn, ResultantBoard),
+      set_game_board(ResultantBoard),
+      next_turn(CurrentTurn, NextTurn),
+      set_game_turn(NextTurn), !,
+      play_game, !
+      )
+    ).
 
 play_game:-
   game_mode(Mode),
