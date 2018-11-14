@@ -39,7 +39,7 @@ print_main_menu:-
   write('Choose an option: '),nl.
 
 start_pvp_game:-
-  configure_pvb_game,
+  configure_pvp_game,
   play_game.
 
 start_pvb_game:-
