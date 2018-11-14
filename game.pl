@@ -1,57 +1,30 @@
 configure_pvp_game:-
-  initial_board(Board).
+  initial_board(Board),
   set_game_board(Board),
   set_game_mode(pvp),
   set_game_turn(blackPlayer).
 
 configure_pvb_game:-
-  initial_board(Board).
+  initial_board(Board),
   set_game_board(Board),
   set_game_mode(pvb),
   set_game_turn(blackPlayer).
 
 configure_bvp_game:-
-  initial_board(Board).
+  initial_board(Board),
   set_game_board(Board),
   set_game_mode(bvp),
   set_game_turn(blackPlayer).
 
 configure_bvb_game:-
-  initial_board(Board).
+  initial_board(Board),
   set_game_board(Board),
   set_game_mode(bvb),
   set_game_turn(blackPlayer).
 
-% createPvPGame(Game):-
-% 	initial_board(Board),
-% 	Game = [Board, blackPlayer, pvp], !.
-% createPvBGame(Game):-
-% 	initial_board(Board),
-% 	Game = [Board, blackPlayer, pvb], !.
-% createBvPGame(Game):-
-% 	initial_board(Board),
-% 	Game = [Board, blackPlayer, bvp], !.
-% createBvBGame(Game):-
-% 	initial_board(Board),
-% 	Game = [Board, blackPlayer, bvb], !.
-
 %========================%
-%= @@ getters & setters =%
+%=       @@setters      =%
 %========================%
-
-get_game_board([Board|_], Board).
-
-set_game_board(Board, Game, ResultantGame):-
-	setListElemAtWith(0, Board, Game, ResultantGame).
-
-get_game_mode(Game, Mode):-
-	getListElemAt(2, Game, Mode).
-
-get_game_player_turn(Game, Player):-
-  getListElemAt(1, Game, Player).
-
-set_game_player_turn(Player, Game, ResultantGame):-
-	setListElemAtWith(1, Player, Game, ResultantGame).
 
 set_game_board(Board):-
   nonvar(Board),

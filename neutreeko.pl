@@ -66,16 +66,14 @@ play_game:-
   game_mode(Mode),
   Mode == pvb,
   game_turn(CurrentTurn),
-  (
-  CurrentTurn == blackPlayer,
-  human_play(Board, CurrentTurn, ResultantBoard),
-  set_game_board(ResultantBoard),
-  next_turn(CurrentTurn, NextTurn),
-  set_game_turn(NextTurn), !,
-  play_game, !
+  (CurrentTurn == blackPlayer,
+    human_play(Board, CurrentTurn, ResultantBoard),
+    set_game_board(ResultantBoard),
+    next_turn(CurrentTurn, NextTurn),
+    set_game_turn(NextTurn), !,
+    play_game, !
   );
-  (
-    CurrentTurn == whitePlayer,
+  (CurrentTurn == whitePlayer,
     bot_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
@@ -83,16 +81,19 @@ play_game:-
     play_game, !
   ).
 
-% play_game(Game):-
-%   get_game_mode(Game, Mode),
-%   get_game_board(Game, Board),
-%   get_game_player_turn(Game, Player),
-%   Mode == bvb,
-%   display_game(Board, Player),
-%   sleep(1),
-%   bot_play(Game, TempGame1),
-%   next_turn(TempGame1, ResultantGame),
-%   play_game(ResultantGame), !.
+play_game:-
+  game_mode(Mode),
+  Mode == bvb,
+
+  game_board(Board),
+  game_turn(CurrentTurn),
+  display_game(Board, CurrentTurn),
+  sleep(1),
+  bot_play(Board, CurrentTurn, ResultantBoard),
+  set_game_board(ResultantBoard),
+  next_turn(CurrentTurn, NextTurn),
+  set_game_turn(NextTurn), !,
+  play_game, !.
 
 bot_play(Board, Player, ResultantBoard):-
   bot_diff(Level),
