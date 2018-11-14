@@ -99,8 +99,8 @@ human_play(Board, Player, ResultantBoard):-
   display_game(Board,Player),
   valid_moves(Board, Player, ListOfMoves),
   display_moves(ListOfMoves, 1),
-  get_move_index(Index),
-  getListElemAt(Index, ListOfMoves, Move),
+  get_move_option(ListOfMoves, Option),
+  getListElemAt(Option, ListOfMoves, Move),
   move(Move, Board, ResultantBoard).
 
 valid_moves(Board, Player, ListOfMoves):-
@@ -241,7 +241,9 @@ checkDiagonal(Board, Piece) :-  (
 %= @@ game input functions =%
 %===========================%
 
-get_move_index(Index):-
+get_move_option(ListOfMoves, Option):-
 	write('Please insert the move you wish to do and press <Enter> - example: 1.'), nl,
-  get_move_int(MoveIndex),
-  Index is MoveIndex-1,nl.
+  length(ListOfMoves, ListOfMovesLength),
+  MaxSizeOfOption is (ListOfMovesLength//10)+1,
+  read_option(MaxSizeOfOption, MoveOption),
+  Option is MoveOption-1.

@@ -3,15 +3,15 @@
 
 main_menu:-
   print_main_menu,
-  getChar(Input),
+  read_option(1, Option),
   (
-    Input = '1' -> game_mode_menu, main_menu;
-    Input = '2' -> print_help, main_menu;
-    Input = '3' -> print_about, main_menu;
-    Input = '4';
+    Option = 1 -> game_mode_menu, main_menu;
+    Option = 2 -> print_help, main_menu;
+    Option = 3 -> print_about, main_menu;
+    Option = 4;
 
     nl,
-    write('Error: invalid input.'), nl,
+    write('Error: invalid option.'), nl,
     print_enter_to_continue, nl,
     main_menu
   ).
@@ -54,17 +54,17 @@ start_bvb_game:-
 
 game_mode_menu:-
   print_game_mode_menu,
-  getChar(Input),
+  read_option(1, Option),
   (
-		Input = '1' -> start_pvp_game;
-  	Input = '2' -> start_pvb_game;
-    Input = '3' -> start_bvp_game;
-	  Input = '4' -> start_bvb_game;
-	  Input = '5' -> difficulty_menu;
-    Input = '6';
+		Option = 1 -> start_pvp_game;
+  	Option = 2 -> start_pvb_game;
+    Option = 3 -> start_bvp_game;
+	  Option = 4 -> start_bvb_game;
+	  Option = 5 -> difficulty_menu;
+    Option = 6;
 
     nl,
-		write('Error: invalid input.'), nl,
+		write('Error: invalid option.'), nl,
 		print_enter_to_continue, nl,
 		game_mode_menu
   ).
@@ -93,14 +93,14 @@ print_game_mode_menu:-
 
 difficulty_menu:-
   print_difficulty_menu,
-  getChar(Input),
+  read_option(1, Option),
   (
-    Input = '1' -> set_bot_diff(random), game_mode_menu;
-    Input = '2' -> set_bot_diff(greedy), game_mode_menu;
-    Input = '3';
+    Option = 1 -> set_bot_diff(random), game_mode_menu;
+    Option = 2 -> set_bot_diff(greedy), game_mode_menu;
+    Option = 3;
 
     nl,
-		write('Error: invalid input.'), nl,
+		write('Error: invalid option.'), nl,
 		print_enter_to_continue, nl,
 		difficulty_menu
   ).

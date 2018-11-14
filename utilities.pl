@@ -31,16 +31,16 @@ print_enter_to_continue:-
 discard_input_char:-
   get_code(_).
 
-%TODO: improve this to get character before "Enter"
-%Trap char in Input variable, discard "Enter"
-getChar(Input):-
-  get_char(Input),
-  get_char(_).
+read_option(MaxLength, Option):-
+  read_line(Line),
+  length(Line, LineLength),
+  LineLength =< MaxLength,
+  read_option_aux(Line, LineLength, FloatOption),
+  Option is integer(FloatOption).
 
-get_move_int(Input):-
-	read(TempInput),
-  (
-  integer(TempInput),
-  Input = TempInput
-  );
-  fail.
+read_option_aux([], _, 0).
+read_option_aux([Head|Tail], LineLength, Option):-
+  Head >= 48, Head =<57, %verify if its a value between 0 and 9
+  TailLenght is LineLength-1,
+  read_option_aux(Tail, TailLenght, TailOption),
+  Option is (Head-48)*exp(10,TailLenght)+TailOption.
