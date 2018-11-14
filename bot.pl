@@ -159,7 +159,7 @@ max_value_move_aux(Board, [Head|Tail], MaxValue, Move):-
   value(ResultantBoard, ResultantBoardValue),
   ResultantBoardValue > TailMaxValue,
   MaxValue is ResultantBoardValue,
-  Move is Head.
+  Move = Head.
 
 max_value_move_aux(Board, [Head|Tail], MaxValue, Move):-
   max_value_move_aux(Board, Tail, TailMaxValue, TailMove),
@@ -167,7 +167,7 @@ max_value_move_aux(Board, [Head|Tail], MaxValue, Move):-
   value(ResultantBoard, ResultantBoardValue),
   ResultantBoardValue =< TailMaxValue,
   MaxValue is TailMaxValue,
-  Move is TailMove.
+  Move = TailMove.
 
 
 min_value_move(Board, ListOfMoves, Move):-
@@ -181,7 +181,7 @@ min_value_move_aux(Board, [Head|Tail], MinValue, Move):-
   value(ResultantBoard, ResultantBoardValue),
   ResultantBoardValue < TailMinValue,
   MinValue is ResultantBoardValue,
-  Move is Head.
+  Move = Head.
 
 min_value_move_aux(Board, [Head|Tail], MinValue, Move):-
   min_value_move_aux(Board, Tail, TailMinValue, TailMove),
@@ -189,4 +189,4 @@ min_value_move_aux(Board, [Head|Tail], MinValue, Move):-
   value(ResultantBoard, ResultantBoardValue),
   ResultantBoardValue >= TailMinValue,
   MinValue is TailMinValue,
-  Move is TailMove.
+  Move = TailMove.
