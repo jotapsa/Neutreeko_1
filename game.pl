@@ -20,7 +20,7 @@ game_board([
 game_turn(blackPlayer).
 
 :-dynamic bot_diff/1.
-bot_diff(random).
+bot_diff(greedy).
 
 %p = player, b = bot
 :-dynamic game_mode/1.
@@ -74,7 +74,7 @@ set_bot_diff(Level):-
   nonvar(Level),
   retract(bot_diff(_)),
   asserta(bot_diff(Level)).
-  
+
 %====================%
 %= @@ board presets =%
 %====================%
