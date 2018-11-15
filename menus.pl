@@ -2,8 +2,10 @@
 % 50 columns so to center text use the 25th column
 
 main_menu:-
+  repeat,
+
   print_main_menu,
-  read_option(1, Option),
+  read_option(1, Option), !,
   (
     Option = 1 -> game_mode_menu, main_menu;
     Option = 2 -> print_help, main_menu;
@@ -53,8 +55,10 @@ start_bvb_game:-
   play_game.
 
 game_mode_menu:-
+  repeat,
+
   print_game_mode_menu,
-  read_option(1, Option),
+  read_option(1, Option), !,
   (
 		Option = 1 -> start_pvp_game;
   	Option = 2 -> start_pvb_game;
@@ -92,8 +96,10 @@ print_game_mode_menu:-
   write('Choose an option: '),nl.
 
 difficulty_menu:-
+  repeat,
+
   print_difficulty_menu,
-  read_option(1, Option),
+  read_option(1, Option), !,
   (
     Option = 1 -> set_bot_diff(random), game_mode_menu;
     Option = 2 -> set_bot_diff(greedy), game_mode_menu;

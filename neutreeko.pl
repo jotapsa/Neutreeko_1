@@ -242,7 +242,7 @@ checkDiagonal(Board, Piece) :-  (
 %===========================%
 
 get_move_option(ListOfMoves, Option):-
-	write('Please insert the move you wish to do and press <Enter> - example: 1.'), nl,
+	write('Choose a move:'), nl,
   length(ListOfMoves, ListOfMovesLength),
   MaxSizeOfOption is (ListOfMovesLength//10)+1,
   read_option(MaxSizeOfOption, MoveOption),
