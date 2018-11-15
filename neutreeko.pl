@@ -20,11 +20,14 @@ play_game:-
   display_game(Board),
   announce(Winner).
 
+
+:-dynamic bot_diff/1.
+bot_diff(greedy).
+
 play_game:-
   game_mode(Mode),
   Mode == pvp,
   game_board(Board), game_turn(CurrentTurn),
-
   human_play(Board, CurrentTurn, ResultantBoard),
   set_game_board(ResultantBoard),
   next_turn(CurrentTurn, NextTurn),
