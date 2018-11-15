@@ -128,7 +128,7 @@ choose_move(Board, Player, Level, Move):-
   valid_moves(Board, Player, ListOfMoves),
   (
     Level == random -> dumb_bot(Board, ListOfMoves, Move);
-    greedy_bot(Board, Player, ListOfMoves, Move)
+    greedy_bot(Board, ListOfMoves, Player, Move)
   ).
 
 dumb_bot(Board, ListOfMoves, Move):-
@@ -136,56 +136,29 @@ dumb_bot(Board, ListOfMoves, Move):-
   random(0, Length, MoveIndex),
   nth0(MoveIndex, ListOfMoves, Move).
 
-greedy_bot(Board, Player, ListOfMoves, Move):-
-  maximizing(Player),
-  max_value_move(Board, ListOfMoves, Move).
-
-% greedy_bot(Board, Player, ListOfMoves, Move):-
-%   minimizing(Player),
-%   min_value_move(Board, ListOfMoves, Move).
-
-max_value_move(Board, ListOfMoves, Move):-
-  max_value_move_aux(Board, ListOfMoves, MaxValue, Move).
-
-% max_value_move_aux(Board, [], -999999999, m(_,_,_,_)).
-max_value_move_aux(Board, [], -999999999, m(0, 0, 0, 0)).
-
-max_value_move_aux(Board, [m(Hi, Di, Hf, Df)|Tail], MaxValue, m(Yi, Xi, Yf, Xf)):-
-  max_value_move_aux(Board, Tail, TailMaxValue, m(Ti, Mi, Tf, Mf)),
-  write(m(Hi, Di, Hf, Df)+'\n'),
-  move(m(Hi, Di, Hf, Df), Board, ResultantBoard),
-  value(ResultantBoard, ResultantBoardValue),
-  (ResultantBoardValue > TailMaxValue ->
-    (
-    % Move = Head.
-    MaxValue = ResultantBoardValue,
-    Yi = Hi, Xi = Di, Yf = Hf, Mf = Df
-    );
-    (
-    % Move = TailMove.
-    MaxValue = TailMaxValue,
-    Yi = Ti, Xi = Mi, Yf = Tf, Mf = Xf
-    )
-  ),
-  write('endof '+m(Hi, Di, Hf, Df)+'\n').
-
-min_value_move(Board, ListOfMoves, Move):-
-  min_value_move_aux(Board, ListOfMoves, MinValue, Move).
-
-min_value_move_aux(Board, [], 9999999999, Move).
-
-min_value_move_aux(Board, [Head|Tail], MinValue, Move):-
-  min_value_move_aux(Board, Tail, TailMinValue, TailMove),
+evaluate_list_of_moves(_, [], []).
+evaluate_list_of_moves(Board, [Head|Tail], ListValueOfMoves):-
+  evaluate_list_of_moves(Board, Tail, TailListValueOfMoves),
   move(Head, Board, ResultantBoard),
-  value(ResultantBoard, ResultantBoardValue),
-  ResultantBoardValue < TailMinValue,
-  MinValue is ResultantBoardValue,
-  Move = Head.
+  value(ResultantBoard, BoardValue),
+  append(TailListValueOfMoves, [BoardValue], ListValueOfMoves).
 
-min_value_move_aux(Board, [Head|Tail], MinValue, Move):-
-  min_value_move_aux(Board, Tail, TailMinValue, TailMove),
-  move(Head, Board, ResultantBoard),
-  value(ResultantBoard, ResultantBoardValue),
-  ResultantBoardValue >= TailMinValue,
-  MinValue is TailMinValue,
-  Move = TailMove.
+choose_min_move(ListValueOfMoves, MinimizerMoveIndex):-
+  min_member(MinValue, ListValueOfMoves),
+  nth0(MaximizerMoveIndex, ListValueOfMoves, MinValue).
+
+choose_max_move(ListValueOfMoves, MaximizerMoveIndex):-
+  max_member(MaxValue, ListValueOfMoves),
+  nth0(MaximizerMoveIndex, ListValueOfMoves, MaxValue).
+
+greedy_bot(Board, ListOfMoves, Player, Move):-
+  evaluate_list_of_moves(Board, ListOfMoves, ListValueOfMoves),
+  ((
+    maximizing(Player),
+    choose_max_move(ListValueOfMoves, MoveIndex)
+  );
+  (
+    minimizing(Player),
+    choose_min_move(ListValueOfMoves, MoveIndex)
+  )),
+  nth0(MoveIndex, ListOfMoves, Move).
