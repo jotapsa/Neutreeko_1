@@ -3,12 +3,14 @@
 %========================%
 
 announce(Winner):-
+  (
   Winner == whitePlayer,
-  write('White Player won!').
-
-announce(Winner):-
+  write('White Player won!')
+  );
+  (
   Winner == blackPlayer,
-  write('Black Player won!').
+  write('Black Player won!')
+  ).
 
 clear_console:-
 	clear_console(40), !.
@@ -29,13 +31,16 @@ print_enter_to_continue:-
 discard_input_char:-
   get_code(_).
 
-%TODO: improve this to get character before "Enter"
-%Trap char in Input variable, discard "Enter"
-getChar(Input):-
-  get_char(Input),
-  get_char(_).
+read_option(MaxLength, Option):-
+  read_line(Line),
+  length(Line, LineLength),
+  LineLength =< MaxLength,
+  read_option_aux(Line, LineLength, FloatOption),
+  Option is integer(FloatOption).
 
-%in ascii: ascii_code(1)-48 = 1.
-get_int(Input):-
-	get_code(TempInput),
-	Input is TempInput - 48.
+read_option_aux([], _, 0).
+read_option_aux([Head|Tail], LineLength, Option):-
+  Head >= 48, Head =<57, %verify if its a value between 0 and 9
+  TailLenght is LineLength-1,
+  read_option_aux(Tail, TailLenght, TailOption),
+  Option is (Head-48)*exp(10,TailLenght)+TailOption.
