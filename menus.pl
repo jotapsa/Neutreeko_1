@@ -1,6 +1,10 @@
-% Menus
+%===============================%
+%= @@ Game Menus               =%
+%===============================%
+
 % 50 columns so to center text use the 25th column
 
+% Main Menu function.
 main_menu:-
   repeat,
 
@@ -18,6 +22,7 @@ main_menu:-
     main_menu
   ).
 
+% Function that prints main Menu.
 print_main_menu:-
   clear_console,
   write('===================================================='),nl,
@@ -38,22 +43,27 @@ print_main_menu:-
   write('===================================================='),nl,
   write('Choose an option: '),nl.
 
+% Function that starts Player vs Player game.
 start_pvp_game:-
   configure_pvp_game,
   play_game.
 
+% Function that starts Player vs Computer game.
 start_pvb_game:-
   configure_pvb_game,
   play_game.
 
+% Function that starts Computer vs Player game.
 start_bvp_game:-
   configure_bvp_game,
   play_game.
 
+% Function that starts Computer vs Computer game.
 start_bvb_game:-
   configure_bvb_game,
   play_game.
 
+% Game mode Menu function.
 game_mode_menu:-
   repeat,
 
@@ -73,6 +83,7 @@ game_mode_menu:-
 		game_mode_menu
   ).
 
+% Function that prints Game mode Menu.
 print_game_mode_menu:-
   clear_console,
   write('===================================================='),nl,
@@ -95,6 +106,7 @@ print_game_mode_menu:-
   write('===================================================='),nl,
   write('Choose an option: '),nl.
 
+% Computer difficulty Menu function.
 difficulty_menu:-
   repeat,
 
@@ -111,6 +123,7 @@ difficulty_menu:-
 		difficulty_menu
   ).
 
+% Function that prints Computer difficulty Menu.
 print_difficulty_menu:-
   clear_console,
   write('===================================================='),nl,
@@ -130,6 +143,7 @@ print_difficulty_menu:-
   write('===================================================='),nl,
   write('Choose an option: '),nl.
 
+% Function that prints About Menu.
 print_about:-
   clear_console,
   write('===================================================='),nl,
@@ -169,7 +183,7 @@ print_about:-
   write('===================================================='),nl,
   print_enter_to_continue, nl.
 
-
+% Function that prints Help Menu.
 print_help:-
   clear_console,
   write('===================================================='),nl,

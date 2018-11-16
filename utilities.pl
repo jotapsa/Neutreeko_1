@@ -2,6 +2,7 @@
 %= @@ console utilities =%
 %========================%
 
+% Function that prints the winner.
 announce(Winner):-
   (
   Winner == whitePlayer,
@@ -12,6 +13,7 @@ announce(Winner):-
   write('Black Player won!')
   ).
 
+% Function that cleans the console.
 clear_console:-
 	clear_console(40), !.
 
@@ -21,6 +23,7 @@ clear_console(N):-
 	N1 is N-1,
 	clear_console(N1).
 
+% Functions that waits for user to press Enter.
 waitForEnter:-
   get_char(_).
 
@@ -31,6 +34,7 @@ print_enter_to_continue:-
 discard_input_char:-
   get_code(_).
 
+% Function that reads user input option.
 read_option(MaxLength, Option):-
   read_line(Line),
   length(Line, LineLength),

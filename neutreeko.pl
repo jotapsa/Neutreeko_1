@@ -1,3 +1,7 @@
+%===============================%
+%= @@ Neutreeko Game           =%
+%===============================%
+
 :-use_module(library(lists)).
 :-use_module(library(random)).
 :-use_module(library(aggregate)).
@@ -11,19 +15,22 @@
 :-include('game.pl').
 :-include('bot.pl').
 
+% Play. (start)
 play:-
   main_menu.
 
+% Function that checks if a game is over and announces the winner.
 play_game:-
   game_board(Board),
   game_over(Board, Winner), !,
   display_game(Board),
   announce(Winner).
 
-
+% Dynamic Computer difficulty.
 :-dynamic bot_diff/1.
 bot_diff(greedy).
 
+% Player vs Player game logic.
 play_game:-
   game_mode(Mode),
   Mode == pvp,
@@ -34,6 +41,7 @@ play_game:-
   set_game_turn(NextTurn),
   play_game, !.
 
+% Player vs Computer game logic.
 play_game:-
   game_mode(Mode),
   Mode == pvb,
@@ -55,6 +63,7 @@ play_game:-
     )
   ).
 
+% Computer vs Player game logic.
 play_game:-
   game_mode(Mode),
   Mode == bvp,
@@ -76,6 +85,7 @@ play_game:-
     )
   ).
 
+% Computer vs Computer game logic.
 play_game:-
   game_mode(Mode),
   Mode == bvb,
@@ -90,11 +100,13 @@ play_game:-
   set_game_turn(NextTurn), !,
   play_game, !.
 
+% Computer's movement.
 bot_play(Board, Player, ResultantBoard):-
   bot_diff(Level),
   choose_move(Board, Player, Level, Move),
   move(Move, Board, ResultantBoard).
 
+% PLlayer's movement.
 human_play(Board, Player, ResultantBoard):-
   repeat,
 
@@ -106,6 +118,7 @@ human_play(Board, Player, ResultantBoard):-
   getListElemAt(Option, ListOfMoves, Move),
   move(Move, Board, ResultantBoard).
 
+% Function that gets all player's valid movements.
 valid_moves(Board, Player, ListOfMoves):-
   get_player_piece(Player, Piece),
   findall(m(Yi, Xi, Y, X) , (
@@ -118,11 +131,13 @@ valid_moves(Board, Player, ListOfMoves):-
 %= @@ board validation/manipulation functions =%
 %==============================================%
 
+% Function that validates a move.
 validate_move(m(Yi, Xi, Yf, Xf), Board):-
   validate_X_move(m(Yi, Xi, Yf, Xf), Board);
   validate_Y_move(m(Yi, Xi, Yf, Xf), Board);
   validate_XY_move(m(Yi, Xi, Yf, Xf), Board).
 
+% Functions that validates a horizontal move.
 validate_X_move(m(Yi, Xi, Yf, Xf), Board):-
   DiffX is Xf - Xi,
   DiffY is Yf - Yi,
@@ -145,6 +160,7 @@ validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
                                ) ; false
   ).
 
+% Functions that validates a vertical move.
 validate_Y_move(m(Yi, Xi, Yf, Xf), Board):-
   DiffX is Xf - Xi,
   DiffY is Yf - Yi,
@@ -167,6 +183,7 @@ validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
                                ) ; false
   ).
 
+% Functions that validates a diagonal move.
 validate_XY_move(m(Yi, Xi, Yf, Xf), Board):-
   DiffX is Xf - Xi,
   DiffY is Yf - Yi,
@@ -196,11 +213,13 @@ validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, CurrIndex
                                ) ; false
   ).
 
+% Function that makes a Player move on the Board.
 move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
   getMatrixElemAt(Yi, Xi, Board, SrcElem),
   setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
   setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
+% Function that checks if a game is over and returns the winner.
 game_over(Board, Winner) :-(
   checkVertical(Board, Piece) ;
   checkHorizontal(Board, Piece) ;
@@ -208,14 +227,7 @@ game_over(Board, Winner) :-(
   Piece == 'blackPiece' -> Winner = 'blackPlayer' ;
   (Piece == 'whitePiece' -> Winner = 'whitePlayer' ; false)).
 
-checkVertical(Board, Piece) :-
-  getMatrixElemAt(X, Y, Board, Piece),
-  piece(Piece),
-  X1 is X+1, X2 is X+2,
-  getMatrixElemAt(X1, Y, Board, Elem2),
-  getMatrixElemAt(X2, Y, Board, Elem3),
-  Piece == Elem2, Piece == Elem3.
-
+% Function that checks if there are 3 consecutive pieces horizontally.
 checkHorizontal(Board, Piece) :-
   getMatrixElemAt(X, Y, Board, Piece),
   piece(Piece),
@@ -224,6 +236,16 @@ checkHorizontal(Board, Piece) :-
   getMatrixElemAt(X, Y2, Board, Elem3),
   Piece == Elem2, Piece == Elem3.
 
+% Function that verifies that there are 3 consecutive pieces vertically.
+checkVertical(Board, Piece) :-
+  getMatrixElemAt(X, Y, Board, Piece),
+  piece(Piece),
+  X1 is X+1, X2 is X+2,
+  getMatrixElemAt(X1, Y, Board, Elem2),
+  getMatrixElemAt(X2, Y, Board, Elem3),
+  Piece == Elem2, Piece == Elem3.
+
+% Function that checks if there are 3 consecutive pieces diagonally.
 checkDiagonal(Board, Piece) :-  (
   getMatrixElemAt(X, Y, Board, Piece),
   piece(Piece),
@@ -244,6 +266,7 @@ checkDiagonal(Board, Piece) :-  (
 %= @@ game input functions =%
 %===========================%
 
+% Function that reads user input move option.
 get_move_option(ListOfMoves, Option):-
 	write('Choose a move:'), nl,
   length(ListOfMoves, ListOfMovesLength),

@@ -1,3 +1,8 @@
+%===============================%
+%= @@ Computer Logic           =%
+%===============================%
+
+% Board pieces value.
 piece_value(emptyCell, 0).
 piece_value(whitePiece, 1).
 piece_value(blackPiece, -1).
@@ -5,6 +10,7 @@ piece_value(blackPiece, -1).
 maximizing(whitePlayer).
 minimizing(blackPlayer).
 
+% Board weights
 board_weight(0,0,100).
 board_weight(0,1,250).
 board_weight(0,2,500).
@@ -25,6 +31,7 @@ board_weight(4,2,500).
 board_weight(4,3,250).
 board_weight(4,4,100).
 
+% Function that calculates board value.
 value(Board, Value):-
   evaluate_board_pieces(Board, PiecesValue, 0),
   evaluate_board_state(Board, StateValue, 0),
@@ -124,6 +131,7 @@ evaluate_game_over(Board, GameOverValue):-
     GameOverValue is 0
   ).
 
+% Function that chooses the next movement of the computer depending on its difficulty.
 choose_move(Board, Player, Level, Move):-
   valid_moves(Board, Player, ListOfMoves),
   (
@@ -131,11 +139,13 @@ choose_move(Board, Player, Level, Move):-
     greedy_bot(Board, ListOfMoves, Player, Move)
   ).
 
+% Dumb Computer logic.
 dumb_bot(Board, ListOfMoves, Move):-
   length(ListOfMoves, Length),
   random(0, Length, MoveIndex),
   nth0(MoveIndex, ListOfMoves, Move).
 
+% Function that evaluates all the board values for each possible movement.
 evaluate_list_of_moves(_, [], []).
 evaluate_list_of_moves(Board, [Head|Tail], ListValueOfMoves):-
   evaluate_list_of_moves(Board, Tail, TailListValueOfMoves),
@@ -151,6 +161,7 @@ choose_max_move(ListValueOfMoves, MaximizerMoveIndex):-
   max_member(MaxValue, ListValueOfMoves),
   nth0(MaximizerMoveIndex, ListValueOfMoves, MaxValue).
 
+% Greedy Computer logic.
 greedy_bot(Board, ListOfMoves, Player, Move):-
   evaluate_list_of_moves(Board, ListOfMoves, ListValueOfMoves),
   ((
