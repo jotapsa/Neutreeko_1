@@ -2,31 +2,42 @@
 %= @@ board printing functions =%
 %===============================%
 
+% Write Board Letter Coordinates.
 write_letters:-write('       A       B       C       D       E').
+
+% Write Board Spaces.
 write_spaces:-write('   |       |       |       |       |       |').
+
+% Write Board Row.
 write_line:-write('   -----------------------------------------').
 
+% Get Board piece symbol.
 get_cell_symbol(emptyCell, ' ').
 get_cell_symbol(whitePiece, 'O').
 get_cell_symbol(blackPiece, '#').
 get_cell_symbol(_, '?').
 
+% Get Player name.
 get_player_name(whitePlayer, 'White').
 get_player_name(blackPlayer, 'Black').
 
+% Get Player piece.
 get_player_piece(blackPlayer, blackPiece).
 get_player_piece(whitePlayer, whitePiece).
 
+% Get number coordinate from letter.
 get_letter_coordinate(0, 'A').
 get_letter_coordinate(1, 'B').
 get_letter_coordinate(2, 'C').
 get_letter_coordinate(3, 'D').
 get_letter_coordinate(4, 'E').
 
+% Function that prints the turn of the player who is playing.
 print_turn_info(Player):-
   get_player_name(Player, PlayerName),
   write('# It is '), write(PlayerName), write(' player\'s turn to play.'), nl.
 
+% Functions to print a Board.
 display_game(Board):-
   display_board(Board, 0),
   write_line, nl,
@@ -57,6 +68,7 @@ display_line_aux([Cell|Tail]):-
   write('   '), write(Symbol), write('   |'),
   display_line_aux(Tail).
 
+% Function that prints all possible moves.
 display_moves([],_).
 display_moves([m(Yi, Xi, Yf, Xf)| Tail], X):-
 write('   '), write(X), write(' | '),
