@@ -5,13 +5,15 @@
 % Function that prints the winner.
 announce(Winner):-
   (
-  Winner == whitePlayer,
-  write('White Player won!')
-  );
-  (
-  Winner == blackPlayer,
-  write('Black Player won!')
-  ).
+    (
+    Winner == whitePlayer, nl,
+    write('White Player won!')
+    );
+    (
+    Winner == blackPlayer, nl,
+    write('Black Player won!')
+    )
+  ), waitForEnter.
 
 % Function that cleans the console.
 clear_console:-

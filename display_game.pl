@@ -34,7 +34,7 @@ get_letter_coordinate(4, 'E').
 
 % Function that prints the turn of the player who is playing.
 print_turn_info(Player):-
-  get_player_name(Player, PlayerName),
+  get_player_name(Player, PlayerName),nl,
   write('# It is '), write(PlayerName), write(' player\'s turn to play.'), nl.
 
 % Functions to print a Board.
