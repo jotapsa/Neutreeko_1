@@ -24,6 +24,15 @@ game_board([
 [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
 ]).
 
+:-dynamic game_board_history/1.
+game_board_history([
+[emptyCell,whitePiece,emptyCell,whitePiece,emptyCell],
+[emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
+[emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+[emptyCell,emptyCell,whitePiece,emptyCell,emptyCell],
+[emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
+])
+
 % Dynamic game Turn of Game.
 :-dynamic game_turn/1.
 game_turn(blackPlayer).
@@ -92,6 +101,15 @@ set_bot_diff(Level):-
   nonvar(Level),
   retract(bot_diff(_)),
   asserta(bot_diff(Level)).
+
+set_game_board_history(Board):-
+  nonvar(Board),
+  retractall(game_board_history(_)),
+  asserta(game_board_history(Board)).
+
+add_game_board_history(Board):-
+  nonvar(Board),
+  asserta(game_board(Board)).
 
 %=================================%
 %= @@ board presets and examples =%

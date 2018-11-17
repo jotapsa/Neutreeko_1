@@ -37,6 +37,7 @@ play_game:-
   game_board(Board), game_turn(CurrentTurn),
   human_play(Board, CurrentTurn, ResultantBoard),
   set_game_board(ResultantBoard),
+  add_game_board_history(ResultantBoard),
   next_turn(CurrentTurn, NextTurn),
   set_game_turn(NextTurn),
   play_game, !.
@@ -50,6 +51,7 @@ play_game:-
     (CurrentTurn == blackPlayer,
     human_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
+    add_game_board_history(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
     set_game_turn(NextTurn), !,
     play_game, !
@@ -57,6 +59,7 @@ play_game:-
     (CurrentTurn == whitePlayer,
     bot_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
+    add_game_board_history(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
     set_game_turn(NextTurn), !,
     play_game, !
@@ -72,6 +75,7 @@ play_game:-
     (CurrentTurn == whitePlayer,
     human_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
+    add_game_board_history(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
     set_game_turn(NextTurn), !,
     play_game, !
@@ -79,6 +83,7 @@ play_game:-
     (CurrentTurn == blackPlayer,
     bot_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
+    add_game_board_history(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
     set_game_turn(NextTurn), !,
     play_game, !
@@ -96,6 +101,7 @@ play_game:-
   sleep(1),
   bot_play(Board, CurrentTurn, ResultantBoard),
   set_game_board(ResultantBoard),
+  add_game_board_history(ResultantBoard),
   next_turn(CurrentTurn, NextTurn),
   set_game_turn(NextTurn), !,
   play_game, !.
