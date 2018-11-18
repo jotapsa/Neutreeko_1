@@ -226,7 +226,7 @@ game_tie:-
   game_board_history(BoardHistory),
   check_tie(BoardHistory, BoardHistory).
 
-check_tie([Head|Tail], BoardHistory):-
+check_tie([Head|_], BoardHistory):-
   count(BoardHistory, Head, NOfOccur),
   NOfOccur >= 3.
 
