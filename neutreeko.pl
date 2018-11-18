@@ -19,16 +19,13 @@
 play:-
   main_menu.
 
-% Function that checks if a game is over and announces the winner.
 play_game:-
+  game_tie, !,
+  announce_tie;
   game_board(Board),
-  game_over(Board, Winner), !,
+  board_winner(Board, Winner), !,
   display_game(Board),
   announce(Winner).
-
-% Dynamic Computer difficulty.
-:-dynamic bot_diff/1.
-  bot_diff(greedy).
 
 % Player vs Player game logic.
 play_game:-
@@ -225,17 +222,18 @@ move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
   setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
   setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
-% Function that checks if a game is over and returns the winner.
-% game_over(Board, Winner) :-(
-%   checkVertical(Board, Piece) ;
-%   checkHorizontal(Board, Piece) ;
-%   checkDiagonal(Board, Piece)), (
-%   Piece == 'blackPiece' -> Winner = 'blackPlayer' ;
-%   (Piece == 'whitePiece' -> Winner = 'whitePlayer' ; false)).
-% 
-% game_over(Winner):-
-%   game_board(Board),
-%
+game_tie:-
+  game_board_history(BoardHistory),
+  check_tie(BoardHistory, BoardHistory).
+
+check_tie([Head|Tail], BoardHistory):-
+  count(BoardHistory, Head, NOfOccur),
+  NOfOccur >= 3.
+
+check_tie([Head|Tail], BoardHistory):-
+  count(BoardHistory, Head, NOfOccur),
+  NOfOccur < 3,
+  check_tie(Tail, BoardHistory).
 
 board_winner(Board, Winner) :-(
   checkVertical(Board, Piece) ;
