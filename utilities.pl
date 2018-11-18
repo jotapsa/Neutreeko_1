@@ -3,6 +3,7 @@
 %========================%
 
 % Function that prints the winner.
+% announce(-Winner)
 announce(Winner):-
   (
     (
@@ -37,6 +38,7 @@ discard_input_char:-
   get_code(_).
 
 % Function that reads user input option.
+% read_option(+MaxLength, -Option)
 read_option(MaxLength, Option):-
   read_line(Line),
   length(Line, LineLength),
@@ -44,6 +46,7 @@ read_option(MaxLength, Option):-
   read_option_aux(Line, LineLength, FloatOption),
   Option is integer(FloatOption).
 
+% read_option_aux(+List, +LineLength, -Option)
 read_option_aux([], _, 0).
 read_option_aux([Head|Tail], LineLength, Option):-
   Head >= 48, Head =<57, %verify if its a value between 0 and 9

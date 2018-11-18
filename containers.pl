@@ -3,11 +3,13 @@
 %======================================%
 
 % Get a particular element of a matrix.
+% getMatrixElemAt(+Row, +Col, +Matrix, -Elem)
 getMatrixElemAt(Row, Col, Matrix,Elem) :-
    nth0(Row,Matrix,RowList),
    nth0(Col,RowList,Elem).
 
 % Get a particular element from a list.
+% getListElemAt(+N, +List, -Elem)
 getListElemAt(N, List, Elem):-
   nth0(N, List, Elem).
 
