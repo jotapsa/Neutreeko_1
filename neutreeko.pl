@@ -22,8 +22,8 @@ play:-
 play_game:-
   game_tie, !,
   announce_tie;
+  game_winner(Winner) !,
   game_board(Board),
-  board_winner(Board, Winner), !,
   display_game(Board),
   announce(Winner).
 
@@ -246,9 +246,13 @@ check_tie([Head|Tail], BoardHistory):-
   count(BoardHistory, Head, NOfOccur),
   NOfOccur < 3,
   check_tie(Tail, BoardHistory).
-  
-% Function that checks if a game is over and returns the winner.
-% game_over(+Move, -Winner)
+
+game_winner(Winner):-
+  game_board(Board),
+  board_winner(Board, Winner).
+
+% Function that checks if a board has a winner.
+% board_winner(+Move, -Winner)
 board_winner(Board, Winner) :-(
   checkVertical(Board, Piece) ;
   checkHorizontal(Board, Piece) ;
