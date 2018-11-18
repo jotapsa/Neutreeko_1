@@ -41,7 +41,7 @@ value(Board, Value):-
   Value is PiecesValue + StateValue + RandomValue + GameOverValue.
 
 % evaluate_board_pieces(+Board, -Value, +RowIterator)
-evaluate_board_pieces(Board, 0, RowIterator):-
+evaluate_board_pieces(_, 0, RowIterator):-
   RowIterator>4.
 
 evaluate_board_pieces(Board, Value, RowIterator):-
@@ -52,19 +52,19 @@ evaluate_board_pieces(Board, Value, RowIterator):-
   Value is LineValue+RemainingValue.
 
 % evaluate_line_pieces(+Board, -LineValue, +RowIterator, +ColIterator)
-evaluate_line_pieces(Line, 0, _, ColIterator):-
+evaluate_line_pieces(_, 0, _, ColIterator):-
   ColIterator>4.
 
 evaluate_line_pieces(Line, LineValue, RowIterator, ColIterator):-
   nth0(ColIterator, Line, Piece), !,
   piece_value(Piece, PieceValue),
-  board_weight(RowIterator, Column, Weight),
+  board_weight(RowIterator, ColIterator, Weight),
   ColIteratorNext is ColIterator+1,
   evaluate_line_pieces(Line, RemainingValue, RowIterator, ColIteratorNext),
   LineValue is PieceValue*Weight + RemainingValue.
 
 % evaluate_board_state(+Board, -Value, +RowIterator)
-evaluate_board_state(Board, 0, RowIterator):-
+evaluate_board_state(_, 0, RowIterator):-
   RowIterator>4.
 
 evaluate_board_state(Board, Value, RowIterator):-
@@ -75,13 +75,13 @@ evaluate_board_state(Board, Value, RowIterator):-
   Value is LineValue+RemainingValue.
 
 % evaluate_line_pieces(+Board, -LineValue, +RowIterator, +ColIterator)
-evaluate_line_state(Board, 0, _, ColIterator):-
+evaluate_line_state(_, 0, _, ColIterator):-
   ColIterator>4.
 
 evaluate_line_state(Board, LineValue, RowIterator, ColIterator):-
   !,
   RowAbove is RowIterator+1, RowBelow is RowIterator-1, RowAboveAbove is RowIterator+2, RowBelowBelow is RowIterator-2,
-  ColAhead is ColIterator+1, ColBehind is ColIterator-1, ColAheadAhead is ColIterator+2, ColBehindBehind is ColIterator-2,
+  ColAhead is ColIterator+1, ColBehind is ColIterator-1, ColAheadAhead is ColIterator+2,
   %Check above
   ((getMatrixElemAt(RowIterator, ColIterator, Board, Piece1),
   getMatrixElemAt(RowAbove, ColIterator, Board, Piece2),
@@ -143,13 +143,13 @@ evaluate_game_over(Board, GameOverValue):-
 choose_move(Board, Player, Level, Move):-
   valid_moves(Board, Player, ListOfMoves),
   (
-    Level == random -> dumb_bot(Board, ListOfMoves, Move);
+    Level == random -> dumb_bot(ListOfMoves, Move);
     greedy_bot(Board, ListOfMoves, Player, Move)
   ).
 
 % Dumb Computer logic.
 % dumb_bot(+Board, +ListOfMoves, -Move)
-dumb_bot(Board, ListOfMoves, Move):-
+dumb_bot(ListOfMoves, Move):-
   length(ListOfMoves, Length),
   random(0, Length, MoveIndex),
   nth0(MoveIndex, ListOfMoves, Move).
@@ -166,7 +166,7 @@ evaluate_list_of_moves(Board, [Head|Tail], ListValueOfMoves):-
 % choose_min_move(+ListValueOfMoves, -MinimizerMoveIndex)
 choose_min_move(ListValueOfMoves, MinimizerMoveIndex):-
   min_member(MinValue, ListValueOfMoves),
-  nth0(MaximizerMoveIndex, ListValueOfMoves, MinValue).
+  nth0(MinimizerMoveIndex, ListValueOfMoves, MinValue).
 
 % choose_max_move(+ListValueOfMoves, -MaximizerMoveIndex)
 choose_max_move(ListValueOfMoves, MaximizerMoveIndex):-

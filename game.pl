@@ -24,11 +24,22 @@ game_board([
 [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
 ]).
 
+:-dynamic game_board_history/1.
+game_board_history([
+  [
+    [emptyCell,whitePiece,emptyCell,whitePiece,emptyCell],
+    [emptyCell,emptyCell,blackPiece,emptyCell,emptyCell],
+    [emptyCell,emptyCell,emptyCell,emptyCell,emptyCell],
+    [emptyCell,emptyCell,whitePiece,emptyCell,emptyCell],
+    [emptyCell,blackPiece,emptyCell,blackPiece,emptyCell]
+  ]
+  ]).
+
 % Dynamic game Turn of Game.
 :-dynamic game_turn/1.
 game_turn(blackPlayer).
 
-% Dynamic computer difficulty.
+% Dynamic Computer difficulty.
 :-dynamic bot_diff/1.
 bot_diff(greedy).
 
@@ -45,6 +56,7 @@ game_mode(pvp).
 configure_pvp_game:-
   initial_board(Board),
   set_game_board(Board),
+  reset_game_board_history(Board),
   set_game_mode(pvp),
   set_game_turn(blackPlayer).
 
@@ -52,6 +64,7 @@ configure_pvp_game:-
 configure_pvb_game:-
   initial_board(Board),
   set_game_board(Board),
+  reset_game_board_history(Board),
   set_game_mode(pvb),
   set_game_turn(blackPlayer).
 
@@ -59,6 +72,7 @@ configure_pvb_game:-
 configure_bvp_game:-
   initial_board(Board),
   set_game_board(Board),
+  reset_game_board_history(Board),
   set_game_mode(bvp),
   set_game_turn(blackPlayer).
 
@@ -66,6 +80,7 @@ configure_bvp_game:-
 configure_bvb_game:-
   initial_board(Board),
   set_game_board(Board),
+  reset_game_board_history(Board),
   set_game_mode(bvb),
   set_game_turn(blackPlayer).
 
@@ -92,6 +107,21 @@ set_bot_diff(Level):-
   nonvar(Level),
   retract(bot_diff(_)),
   asserta(bot_diff(Level)).
+
+reset_game_board_history(Board):-
+  nonvar(Board),
+  retractall(game_board_history(_)),
+  asserta(game_board_history([Board])).
+
+set_game_board_history(BoardHistory):-
+  nonvar(BoardHistory),
+  retractall(game_board_history(_)),
+  asserta(game_board_history(BoardHistory)).
+
+add_game_board_history(Board):-
+  game_board_history(BoardHistory),
+  append(BoardHistory, [Board], NewBoardHistory),
+  set_game_board_history(NewBoardHistory).
 
 %=================================%
 %= @@ board presets and examples =%

@@ -19,16 +19,13 @@
 play:-
   main_menu.
 
-% Function that checks if a game is over and announces the winner.
 play_game:-
+  game_tie, !,
+  announce_tie;
   game_board(Board),
-  game_over(Board, Winner), !,
+  board_winner(Board, Winner), !,
   display_game(Board),
   announce(Winner).
-
-% Dynamic Computer difficulty.
-:-dynamic bot_diff/1.
-bot_diff(greedy).
 
 % Player vs Player game logic.
 play_game:-
@@ -37,6 +34,7 @@ play_game:-
   game_board(Board), game_turn(CurrentTurn),
   human_play(Board, CurrentTurn, ResultantBoard),
   set_game_board(ResultantBoard),
+  add_game_board_history(ResultantBoard),
   next_turn(CurrentTurn, NextTurn),
   set_game_turn(NextTurn),
   play_game, !.
@@ -50,6 +48,7 @@ play_game:-
     (CurrentTurn == blackPlayer,
     human_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
+    add_game_board_history(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
     set_game_turn(NextTurn), !,
     play_game, !
@@ -57,6 +56,7 @@ play_game:-
     (CurrentTurn == whitePlayer,
     bot_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
+    add_game_board_history(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
     set_game_turn(NextTurn), !,
     play_game, !
@@ -72,6 +72,7 @@ play_game:-
     (CurrentTurn == whitePlayer,
     human_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
+    add_game_board_history(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
     set_game_turn(NextTurn), !,
     play_game, !
@@ -79,6 +80,7 @@ play_game:-
     (CurrentTurn == blackPlayer,
     bot_play(Board, CurrentTurn, ResultantBoard),
     set_game_board(ResultantBoard),
+    add_game_board_history(ResultantBoard),
     next_turn(CurrentTurn, NextTurn),
     set_game_turn(NextTurn), !,
     play_game, !
@@ -96,6 +98,7 @@ play_game:-
   sleep(1),
   bot_play(Board, CurrentTurn, ResultantBoard),
   set_game_board(ResultantBoard),
+  add_game_board_history(ResultantBoard),
   next_turn(CurrentTurn, NextTurn),
   set_game_turn(NextTurn), !,
   play_game, !.
@@ -230,9 +233,23 @@ move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
   setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
   setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
+
+game_tie:-
+  game_board_history(BoardHistory),
+  check_tie(BoardHistory, BoardHistory).
+
+check_tie([Head|_], BoardHistory):-
+  count(BoardHistory, Head, NOfOccur),
+  NOfOccur >= 3.
+
+check_tie([Head|Tail], BoardHistory):-
+  count(BoardHistory, Head, NOfOccur),
+  NOfOccur < 3,
+  check_tie(Tail, BoardHistory).
+  
 % Function that checks if a game is over and returns the winner.
 % game_over(+Move, -Winner)
-game_over(Board, Winner) :-(
+board_winner(Board, Winner) :-(
   checkVertical(Board, Piece) ;
   checkHorizontal(Board, Piece) ;
   checkDiagonal(Board, Piece)), (
