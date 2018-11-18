@@ -37,7 +37,7 @@ discard_input_char:-
   get_code(_).
 
 announce_tie:-
-  write('It\'s a tie!, the same positions have been repeated three times.').
+  write('It\'s a tie!, the same positions have been repeated three times.'), waitForEnter.
 
 count([],X,0).
 count([X|T],X,Y):- count(T,X,Z), Y is 1+Z.
