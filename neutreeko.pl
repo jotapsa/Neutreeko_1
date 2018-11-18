@@ -28,7 +28,7 @@ play_game:-
 
 % Dynamic Computer difficulty.
 :-dynamic bot_diff/1.
-bot_diff(greedy).
+  bot_diff(greedy).
 
 % Player vs Player game logic.
 play_game:-
@@ -226,7 +226,18 @@ move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
   setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
 % Function that checks if a game is over and returns the winner.
-game_over(Board, Winner) :-(
+% game_over(Board, Winner) :-(
+%   checkVertical(Board, Piece) ;
+%   checkHorizontal(Board, Piece) ;
+%   checkDiagonal(Board, Piece)), (
+%   Piece == 'blackPiece' -> Winner = 'blackPlayer' ;
+%   (Piece == 'whitePiece' -> Winner = 'whitePlayer' ; false)).
+% 
+% game_over(Winner):-
+%   game_board(Board),
+%
+
+board_winner(Board, Winner) :-(
   checkVertical(Board, Piece) ;
   checkHorizontal(Board, Piece) ;
   checkDiagonal(Board, Piece)), (

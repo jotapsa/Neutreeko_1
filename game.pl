@@ -54,6 +54,7 @@ game_mode(pvp).
 configure_pvp_game:-
   initial_board(Board),
   set_game_board(Board),
+  set_game_board_history(Board),
   set_game_mode(pvp),
   set_game_turn(blackPlayer).
 
@@ -61,6 +62,7 @@ configure_pvp_game:-
 configure_pvb_game:-
   initial_board(Board),
   set_game_board(Board),
+  set_game_board_history(Board),
   set_game_mode(pvb),
   set_game_turn(blackPlayer).
 
@@ -68,6 +70,7 @@ configure_pvb_game:-
 configure_bvp_game:-
   initial_board(Board),
   set_game_board(Board),
+  set_game_board_history(Board),
   set_game_mode(bvp),
   set_game_turn(blackPlayer).
 
@@ -75,6 +78,7 @@ configure_bvp_game:-
 configure_bvb_game:-
   initial_board(Board),
   set_game_board(Board),
+  set_game_board_history(Board),
   set_game_mode(bvb),
   set_game_turn(blackPlayer).
 
