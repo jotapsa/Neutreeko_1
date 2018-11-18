@@ -33,22 +33,26 @@ get_letter_coordinate(3, 'D').
 get_letter_coordinate(4, 'E').
 
 % Function that prints the turn of the player who is playing.
+% print_turn_info(+Player)
 print_turn_info(Player):-
   get_player_name(Player, PlayerName),nl,
   write('# It is '), write(PlayerName), write(' player\'s turn to play.'), nl.
 
 % Functions to print a Board.
+% display_game(+Board)
 display_game(Board):-
   display_board(Board, 0),
   write_line, nl,
   write_letters,nl, !.
 
+% display_game(+Board, +Player)
 display_game(Board, Player):-
   display_board(Board, 0),
   write_line, nl,
   write_letters,nl,
   print_turn_info(Player), !.
 
+% display_game(+Board, +Y)
 display_board([],_).
 display_board([Line|Tail], Y):-
   write_line, nl,
@@ -58,10 +62,12 @@ display_board([Line|Tail], Y):-
   write_spaces, nl,
   display_board(Tail, Y1).
 
+% display_line(+Board, +Line)
 display_line(Line, Y):-
   write(Y), write('  |'),
   display_line_aux(Line).
 
+% display_line_aux(+List)
 display_line_aux([]).
 display_line_aux([Cell|Tail]):-
   get_cell_symbol(Cell,Symbol),
@@ -69,6 +75,7 @@ display_line_aux([Cell|Tail]):-
   display_line_aux(Tail).
 
 % Function that prints all possible moves.
+% display_moves(+ListOfMoves, +Index)
 display_moves([],_).
 display_moves([m(Yi, Xi, Yf, Xf)| Tail], X):-
 write('   '), write(X), write(' | '),

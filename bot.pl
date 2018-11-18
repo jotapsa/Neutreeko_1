@@ -32,6 +32,7 @@ board_weight(4,3,250).
 board_weight(4,4,100).
 
 % Function that calculates board value.
+% value(+Board, -Value)
 value(Board, Value):-
   evaluate_board_pieces(Board, PiecesValue, 0),
   evaluate_board_state(Board, StateValue, 0),
@@ -39,6 +40,7 @@ value(Board, Value):-
   evaluate_game_over(Board, GameOverValue),
   Value is PiecesValue + StateValue + RandomValue + GameOverValue.
 
+% evaluate_board_pieces(+Board, -Value, +RowIterator)
 evaluate_board_pieces(_, 0, RowIterator):-
   RowIterator>4.
 
@@ -49,6 +51,7 @@ evaluate_board_pieces(Board, Value, RowIterator):-
   evaluate_board_pieces(Board, RemainingValue, RowIteratorNext),
   Value is LineValue+RemainingValue.
 
+% evaluate_line_pieces(+Board, -LineValue, +RowIterator, +ColIterator)
 evaluate_line_pieces(_, 0, _, ColIterator):-
   ColIterator>4.
 
@@ -60,6 +63,7 @@ evaluate_line_pieces(Line, LineValue, RowIterator, ColIterator):-
   evaluate_line_pieces(Line, RemainingValue, RowIterator, ColIteratorNext),
   LineValue is PieceValue*Weight + RemainingValue.
 
+% evaluate_board_state(+Board, -Value, +RowIterator)
 evaluate_board_state(_, 0, RowIterator):-
   RowIterator>4.
 
@@ -70,6 +74,7 @@ evaluate_board_state(Board, Value, RowIterator):-
   evaluate_board_state(Board, RemainingValue, RowIteratorNext),
   Value is LineValue+RemainingValue.
 
+% evaluate_line_pieces(+Board, -LineValue, +RowIterator, +ColIterator)
 evaluate_line_state(_, 0, _, ColIterator):-
   ColIterator>4.
 
@@ -120,9 +125,11 @@ evaluate_line_state(Board, LineValue, RowIterator, ColIterator):-
   evaluate_line_state(Board, RemainingValue, RowIterator, ColAhead),
   LineValue is TempValue1 + TempValue2 + TempValue3 + TempValue4 + RemainingValue.
 
+% generate_random_component(-RandomValue)
 generate_random_component(RandomValue):-
   random(-10, 11, RandomValue).
 
+% evaluate_game_over(+Board, -GameOverValue)
 evaluate_game_over(Board, GameOverValue):-
   (game_over(Board, Winner) ->(
     Winner == 'blackPlayer' -> piece_value(blackPiece, PieceValue), GameOverValue is PieceValue * 100000;
@@ -132,6 +139,7 @@ evaluate_game_over(Board, GameOverValue):-
   ).
 
 % Function that chooses the next movement of the computer depending on its difficulty.
+% choose_move(+Board, +Player, +Level, -Move)
 choose_move(Board, Player, Level, Move):-
   valid_moves(Board, Player, ListOfMoves),
   (
@@ -140,12 +148,14 @@ choose_move(Board, Player, Level, Move):-
   ).
 
 % Dumb Computer logic.
+% dumb_bot(+Board, +ListOfMoves, -Move)
 dumb_bot(ListOfMoves, Move):-
   length(ListOfMoves, Length),
   random(0, Length, MoveIndex),
   nth0(MoveIndex, ListOfMoves, Move).
 
 % Function that evaluates all the board values for each possible movement.
+% evaluate_list_of_moves(+Board, +ListOfMoves, -ListValueOfMoves)
 evaluate_list_of_moves(_, [], []).
 evaluate_list_of_moves(Board, [Head|Tail], ListValueOfMoves):-
   evaluate_list_of_moves(Board, Tail, TailListValueOfMoves),
@@ -153,15 +163,18 @@ evaluate_list_of_moves(Board, [Head|Tail], ListValueOfMoves):-
   value(ResultantBoard, BoardValue),
   append(TailListValueOfMoves, [BoardValue], ListValueOfMoves).
 
+% choose_min_move(+ListValueOfMoves, -MinimizerMoveIndex)
 choose_min_move(ListValueOfMoves, MinimizerMoveIndex):-
   min_member(MinValue, ListValueOfMoves),
   nth0(MinimizerMoveIndex, ListValueOfMoves, MinValue).
 
+% choose_max_move(+ListValueOfMoves, -MaximizerMoveIndex)
 choose_max_move(ListValueOfMoves, MaximizerMoveIndex):-
   max_member(MaxValue, ListValueOfMoves),
   nth0(MaximizerMoveIndex, ListValueOfMoves, MaxValue).
 
 % Greedy Computer logic.
+% greedy_bot(+Board, +ListOfMoves, +Player, -Move)
 greedy_bot(Board, ListOfMoves, Player, Move):-
   evaluate_list_of_moves(Board, ListOfMoves, ListValueOfMoves),
   ((

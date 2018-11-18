@@ -104,12 +104,14 @@ play_game:-
   play_game, !.
 
 % Computer's movement.
+% bot_play(+Board, +Player, -ResultantBoard)
 bot_play(Board, Player, ResultantBoard):-
   bot_diff(Level),
   choose_move(Board, Player, Level, Move),
   move(Move, Board, ResultantBoard).
 
 % PLlayer's movement.
+% human_play(+Board, +Player, -ResultantBoard)
 human_play(Board, Player, ResultantBoard):-
   repeat,
 
@@ -122,6 +124,7 @@ human_play(Board, Player, ResultantBoard):-
   move(Move, Board, ResultantBoard).
 
 % Function that gets all player's valid movements.
+% valid_moves(+Board, +Player, -ListOfMoves)
 valid_moves(Board, Player, ListOfMoves):-
   get_player_piece(Player, Piece),
   findall(m(Yi, Xi, Y, X) , (
@@ -135,12 +138,14 @@ valid_moves(Board, Player, ListOfMoves):-
 %==============================================%
 
 % Function that validates a move.
+% validate_move(+Move, +Board)
 validate_move(m(Yi, Xi, Yf, Xf), Board):-
   validate_X_move(m(Yi, Xi, Yf, Xf), Board);
   validate_Y_move(m(Yi, Xi, Yf, Xf), Board);
   validate_XY_move(m(Yi, Xi, Yf, Xf), Board).
 
 % Functions that validates a horizontal move.
+% validate_X_move(+Move, +Board)
 validate_X_move(m(Yi, Xi, Yf, Xf), Board):-
   DiffX is Xf - Xi,
   DiffY is Yf - Yi,
@@ -148,6 +153,7 @@ validate_X_move(m(Yi, Xi, Yf, Xf), Board):-
   (DiffX > 0 -> Direction is 1 ; Direction is -1),
   validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, 0).
 
+% validate_X_move_aux(+Move, +Board, +Direction, +CurrIndex)
 validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   NewIndex is CurrIndex+Direction,
   NextX is Xi+NewIndex,
@@ -164,6 +170,7 @@ validate_X_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   ).
 
 % Functions that validates a vertical move.
+% validate_Y_move(+Move, +Board)
 validate_Y_move(m(Yi, Xi, Yf, Xf), Board):-
   DiffX is Xf - Xi,
   DiffY is Yf - Yi,
@@ -171,6 +178,7 @@ validate_Y_move(m(Yi, Xi, Yf, Xf), Board):-
   (DiffY > 0 -> Direction is 1 ; Direction is -1),
   validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, 0).
 
+% validate_Y_move_aux(+Move, +Board, +Direction, +CurrIndex)
 validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   NewIndex is CurrIndex+Direction,
   NextY is Yi+NewIndex,
@@ -187,6 +195,7 @@ validate_Y_move_aux(m(Yi, Xi, Yf, Xf), Board, Direction, CurrIndex):-
   ).
 
 % Functions that validates a diagonal move.
+% validate_XY_move(+Move, +Board)
 validate_XY_move(m(Yi, Xi, Yf, Xf), Board):-
   DiffX is Xf - Xi,
   DiffY is Yf - Yi,
@@ -197,6 +206,7 @@ validate_XY_move(m(Yi, Xi, Yf, Xf), Board):-
   (DiffX > 0 -> DirectionX is 1 ; DirectionX is -1),
   validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, 0,0).
 
+% validate_X_move_aux(+Move, +Board, +DirectionY, +DirectionX, +CurrIndexY, +CurrIndexX)
 validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, CurrIndexY, CurrIndexX):-
   NewIndexY is CurrIndexY+DirectionY,
   NextY is Yi+NewIndexY,
@@ -217,10 +227,12 @@ validate_XY_move_aux(m(Yi, Xi, Yf, Xf), Board, DirectionY, DirectionX, CurrIndex
   ).
 
 % Function that makes a Player move on the Board.
+% move(+Move, +Board, -ResultantBoard)
 move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
   getMatrixElemAt(Yi, Xi, Board, SrcElem),
   setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
   setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
+
 
 game_tie:-
   game_board_history(BoardHistory),
@@ -234,7 +246,9 @@ check_tie([Head|Tail], BoardHistory):-
   count(BoardHistory, Head, NOfOccur),
   NOfOccur < 3,
   check_tie(Tail, BoardHistory).
-
+  
+% Function that checks if a game is over and returns the winner.
+% game_over(+Move, -Winner)
 board_winner(Board, Winner) :-(
   checkVertical(Board, Piece) ;
   checkHorizontal(Board, Piece) ;
@@ -243,6 +257,7 @@ board_winner(Board, Winner) :-(
   (Piece == 'whitePiece' -> Winner = 'whitePlayer' ; false)).
 
 % Function that checks if there are 3 consecutive pieces horizontally.
+% checkHorizontal(+Move, +Piece)
 checkHorizontal(Board, Piece) :-
   getMatrixElemAt(X, Y, Board, Piece),
   piece(Piece),
@@ -252,6 +267,7 @@ checkHorizontal(Board, Piece) :-
   Piece == Elem2, Piece == Elem3.
 
 % Function that verifies that there are 3 consecutive pieces vertically.
+% checkVertical(+Move, +Piece)
 checkVertical(Board, Piece) :-
   getMatrixElemAt(X, Y, Board, Piece),
   piece(Piece),
@@ -261,6 +277,7 @@ checkVertical(Board, Piece) :-
   Piece == Elem2, Piece == Elem3.
 
 % Function that checks if there are 3 consecutive pieces diagonally.
+% checkDiagonal(+Move, +Piece)
 checkDiagonal(Board, Piece) :-  (
   getMatrixElemAt(X, Y, Board, Piece),
   piece(Piece),
@@ -282,6 +299,7 @@ checkDiagonal(Board, Piece) :-  (
 %===========================%
 
 % Function that reads user input move option.
+% get_move_option(+ListOfMoves, -Option)
 get_move_option(ListOfMoves, Option):-
 	write('Choose a move:'), nl,
   length(ListOfMoves, ListOfMovesLength),
