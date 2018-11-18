@@ -131,7 +131,7 @@ generate_random_component(RandomValue):-
 
 % evaluate_game_over(+Board, -GameOverValue)
 evaluate_game_over(Board, GameOverValue):-
-  (board_winner(Board, Winner) ->(
+  (game_over(Board, Winner) ->(
     Winner == 'blackPlayer' -> piece_value(blackPiece, PieceValue), GameOverValue is PieceValue * 100000;
     Winner == 'whitePlayer' -> piece_value(whitePiece, PieceValue), GameOverValue is PieceValue * 100000
     );

@@ -22,7 +22,7 @@ play:-
 play_game:-
   game_tie, !,
   announce_tie;
-  game_winner(Winner) !,
+  game_winner(Winner), !,
   game_board(Board),
   display_game(Board),
   announce(Winner).
@@ -233,7 +233,7 @@ move(m(Yi, Xi, Yf, Xf), Board, ResultantBoard):-
   setMatrixElemAtWith(Yi, Xi, emptyCell, Board, TempBoard),
   setMatrixElemAtWith(Yf, Xf, SrcElem, TempBoard, ResultantBoard).
 
-
+% Functions that check if the game is tied.
 game_tie:-
   game_board_history(BoardHistory),
   check_tie(BoardHistory, BoardHistory).
@@ -249,11 +249,11 @@ check_tie([Head|Tail], BoardHistory):-
 
 game_winner(Winner):-
   game_board(Board),
-  board_winner(Board, Winner).
+  game_over(Board, Winner).
 
 % Function that checks if a board has a winner.
-% board_winner(+Move, -Winner)
-board_winner(Board, Winner) :-(
+% game_over(+Move, -Winner)
+game_over(Board, Winner) :-(
   checkVertical(Board, Piece) ;
   checkHorizontal(Board, Piece) ;
   checkDiagonal(Board, Piece)), (
